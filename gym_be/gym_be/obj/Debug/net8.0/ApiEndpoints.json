@@ -86,5 +86,26 @@
       }
     ],
     "ReturnTypes": []
+  },
+  {
+    "ContainingType": "gym_be.Controllers.CustomerController",
+    "Method": "UpdateCustomer",
+    "RelativePath": "api/Customer/{id}",
+    "HttpMethod": "PUT",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Guid",
+        "IsRequired": true
+      },
+      {
+        "Name": "updatedCustomer",
+        "Type": "gym_be.Models.Customer",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
   }
 ]

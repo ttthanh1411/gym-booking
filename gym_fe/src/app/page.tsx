@@ -2,7 +2,8 @@
 
 import React, { useState } from 'react';
 import AdminLayout from './admin/admin';
-import UserManagement from './admin/customer/customer';
+// import UserManagement from './admin/customer/customer';
+import CustomerPage from './admin/customer/page';
 
 
 function App() {
@@ -11,7 +12,7 @@ function App() {
   const renderContent = () => {
     switch (currentView) {
       case 'users':
-        return <UserManagement />;
+        return <CustomerPage />;
     }
   };
 

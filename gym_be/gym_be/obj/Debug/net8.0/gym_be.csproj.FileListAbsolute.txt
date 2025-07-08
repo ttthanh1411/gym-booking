@@ -49,3 +49,4 @@ E:\WorkSpace\Project_Gym\gym_be\gym_be\obj\Debug\net8.0\refint\gym_be.dll
 E:\WorkSpace\Project_Gym\gym_be\gym_be\obj\Debug\net8.0\gym_be.pdb
 E:\WorkSpace\Project_Gym\gym_be\gym_be\obj\Debug\net8.0\gym_be.genruntimeconfig.cache
 E:\WorkSpace\Project_Gym\gym_be\gym_be\obj\Debug\net8.0\ref\gym_be.dll
+E:\WorkSpace\Project_Gym\gym_be\gym_be\obj\Debug\net8.0\gym_be.sourcelink.json

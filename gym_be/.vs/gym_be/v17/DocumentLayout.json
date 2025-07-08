@@ -48,7 +48,7 @@
               "RelativeDocumentMoniker": "gym_be\\Controllers\\CustomerController.cs",
               "ToolTip": "E:\\WorkSpace\\Project_Gym\\gym_be\\gym_be\\Controllers\\CustomerController.cs",
               "RelativeToolTip": "gym_be\\Controllers\\CustomerController.cs",
-              "ViewState": "AgIAAEcAAAAAAAAAAAAiwFUAAABAAAAAAAAAAA==",
+              "ViewState": "AgIAAB8AAAAAAAAAAAAswDUAAABAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-07-08T13:43:02.646Z",
               "EditorCaption": ""
@@ -87,8 +87,7 @@
               "RelativeToolTip": "gym_be\\Models\\Customer.cs",
               "ViewState": "AgIAAAkAAAAAAAAAAAAAABsAAAApAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-07-08T13:39:50.657Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-07-08T13:39:50.657Z"
             },
             {
               "$type": "Document",
