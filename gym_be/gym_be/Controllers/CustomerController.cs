@@ -62,7 +62,31 @@ namespace gym_be.Controllers
             _context.Customers.Remove(customer);
             await _context.SaveChangesAsync();
 
-            return NoContent(); // HTTP 204 - Xóa thành công, không trả nội dung
+            return NoContent(); 
+        }
+
+        // ✅ PUT: api/customer/{id}
+        [HttpPut("{id}")]
+        public async Task<IActionResult> UpdateCustomer(Guid id, [FromBody] Customer updatedCustomer)
+        {
+            var customer = await _context.Customers.FindAsync(id);
+            if (customer == null)
+            {
+                return NotFound();
+            }
+
+            // Cập nhật thông tin
+            customer.Name = updatedCustomer.Name;
+            customer.PhoneNumber = updatedCustomer.PhoneNumber;
+            customer.Address = updatedCustomer.Address;
+            customer.Email = updatedCustomer.Email;
+            customer.Password = updatedCustomer.Password;
+            customer.Status = updatedCustomer.Status;
+
+            _context.Entry(customer).State = EntityState.Modified;
+            await _context.SaveChangesAsync();
+
+            return NoContent();
         }
     }
 }

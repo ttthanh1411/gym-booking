@@ -15,7 +15,10 @@ const UserManagement: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [filterStatus, setFilterStatus] = useState('all');
   const [showAddModal, setShowAddModal] = useState(false);
+  const [showViewModal, setShowViewModal] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [modalMode, setModalMode] = useState<'view' | 'edit' | 'add' | null>(null);
+  const [selectedUser, setSelectedUser] = useState<Customer | null>(null);
   const [notifications, setNotifications] = useState<ToastNotification[]>([]);
   const [formData, setFormData] = useState({
     name: '',
@@ -24,6 +27,7 @@ const UserManagement: React.FC = () => {
     email: '',
     password: ''
   });
+  const isReadonly = modalMode === 'view';
   const fetchUsers = async () => {
     const res = await customerService.getAll();
     setUsers(res);
@@ -37,21 +41,24 @@ const UserManagement: React.FC = () => {
     e.preventDefault();
     setIsLoading(true);
     try {
-      await customerService.create(formData);
-      setShowAddModal(false);
+      if (modalMode === 'edit' && selectedUser) {
+        await customerService.update(selectedUser.customerID, formData);
+        showNotification('success', 'Cập nhật người dùng thành công!');
+      } else {
+        await customerService.create(formData);
+        showNotification('success', 'Thêm người dùng thành công!');
+      }
+
       fetchUsers();
-      showNotification('success', 'Thêm người dùng thành công!');
-      setFormData({
-        name: '',
-        phoneNumber: '',
-        address: '',
-        email: '',
-        password: '',
-      });
+      setShowAddModal(false);
+      setFormData({ name: '', phoneNumber: '', address: '', email: '', password: '' });
+      setSelectedUser(null);
+      setModalMode(null);
       setIsLoading(false);
     } catch (err) {
-      showNotification('error', 'Có lỗi xảy ra khi thêm người dùng');
-      console.error('Error adding user:', err);
+      showNotification('error', 'Có lỗi xảy ra khi lưu dữ liệu');
+      console.error('Submit error:', err);
+      setIsLoading(false);
     }
   };
 
@@ -131,19 +138,19 @@ const UserManagement: React.FC = () => {
               }`}
           >
             <div className={`flex items-center p-4 rounded-lg shadow-lg min-w-80 ${notification.type === 'success'
-                ? 'bg-green-50 border-l-4 border-green-400'
-                : notification.type === 'error'
-                  ? 'bg-red-50 border-l-4 border-red-400'
-                  : 'bg-yellow-50 border-l-4 border-yellow-400'
+              ? 'bg-green-50 border-l-4 border-green-400'
+              : notification.type === 'error'
+                ? 'bg-red-50 border-l-4 border-red-400'
+                : 'bg-yellow-50 border-l-4 border-yellow-400'
               }`}>
               {notification.type === 'success' && <CheckCircle className="h-5 w-5 text-green-400 mr-3" />}
               {notification.type === 'error' && <AlertCircle className="h-5 w-5 text-red-400 mr-3" />}
               {notification.type === 'warning' && <AlertCircle className="h-5 w-5 text-yellow-400 mr-3" />}
               <span className={`text-sm font-medium ${notification.type === 'success'
-                  ? 'text-green-800'
-                  : notification.type === 'error'
-                    ? 'text-red-800'
-                    : 'text-yellow-800'
+                ? 'text-green-800'
+                : notification.type === 'error'
+                  ? 'text-red-800'
+                  : 'text-yellow-800'
                 }`}>
                 {notification.message}
               </span>
@@ -160,7 +167,7 @@ const UserManagement: React.FC = () => {
             <h1 className="text-2xl font-bold text-gray-900">User Management</h1>
           </div>
           <button
-            onClick={() => setShowAddModal(true)}
+            onClick={() => [setShowAddModal(true),setModalMode('add')]}
             className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors flex items-center space-x-2"
           >
             <Plus className="h-4 w-4" />
@@ -263,10 +270,25 @@ const UserManagement: React.FC = () => {
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-center text-sm font-medium">
                         <div className="flex items-center justify-center space-x-2">
-                          <button className="text-blue-600 hover:text-blue-900 transition-colors p-1 hover:bg-blue-50 rounded">
+                          <button onClick={() => {
+                            setSelectedUser(user);
+                            setShowViewModal(true);
+                          }} className="text-blue-600 hover:text-blue-900 transition-colors p-1 hover:bg-blue-50 rounded">
                             <Eye className="h-4 w-4" />
                           </button>
-                          <button className="text-green-600 hover:text-green-900 transition-colors p-1 hover:bg-green-50 rounded">
+                          <button onClick={() => {
+                            setSelectedUser(user);
+                            setFormData({
+                              name: user.name,
+                              phoneNumber: user.phoneNumber,
+                              address: user.address,
+                              email: user.email,
+                              password: '',
+                            });
+                            setModalMode('edit');
+                            setShowAddModal(true);
+                          }}
+                            className="text-green-600 hover:text-green-900 transition-colors p-1 hover:bg-green-50 rounded">
                             <Edit2 className="h-4 w-4" />
                           </button>
                           <button
@@ -320,7 +342,9 @@ const UserManagement: React.FC = () => {
                   <div className="h-10 w-10 bg-gradient-to-r from-blue-500 to-purple-600 rounded-lg flex items-center justify-center">
                     <User className="h-5 w-5 text-white" />
                   </div>
-                  <h2 className="text-xl font-bold text-gray-800">Thêm người dùng </h2>
+                  <h2 className="text-xl font-bold text-gray-800">
+                    {modalMode === 'view' ? 'Xem thông tin người dùng' : modalMode === 'edit' ? 'Sửa người dùng' : 'Thêm người dùng'}
+                  </h2>
                 </div>
                 <button
                   onClick={handleCloseModal}
@@ -349,7 +373,7 @@ const UserManagement: React.FC = () => {
                           value={formData.name}
                           onChange={handleInputChange}
                           required
-                          className="w-full pl-10 pr-4 py-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-300 transition-all duration-200 bg-gray-50 focus:bg-white"
+                          className="text-black w-full pl-10 pr-4 py-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-300 transition-all duration-200 bg-gray-50 focus:bg-white"
                           placeholder="Enter full name"
                         />
                       </div>
@@ -369,7 +393,7 @@ const UserManagement: React.FC = () => {
                           value={formData.phoneNumber}
                           onChange={handleInputChange}
                           required
-                          className="w-full pl-10 pr-4 py-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-300 transition-all duration-200 bg-gray-50 focus:bg-white"
+                          className="text-black  w-full pl-10 pr-4 py-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-300 transition-all duration-200 bg-gray-50 focus:bg-white"
                           placeholder="Enter phone number"
                         />
                       </div>
@@ -389,7 +413,7 @@ const UserManagement: React.FC = () => {
                           value={formData.address}
                           onChange={handleInputChange}
                           required
-                          className="w-full pl-10 pr-4 py-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-300 transition-all duration-200 bg-gray-50 focus:bg-white"
+                          className="text-black  w-full pl-10 pr-4 py-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-300 transition-all duration-200 bg-gray-50 focus:bg-white"
                           placeholder="Enter address"
                         />
                       </div>
@@ -412,7 +436,7 @@ const UserManagement: React.FC = () => {
                           value={formData.email}
                           onChange={handleInputChange}
                           required
-                          className="w-full pl-10 pr-4 py-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-300 transition-all duration-200 bg-gray-50 focus:bg-white"
+                          className="text-black w-full pl-10 pr-4 py-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-300 transition-all duration-200 bg-gray-50 focus:bg-white"
                           placeholder="Enter email address"
                         />
                       </div>
@@ -432,7 +456,7 @@ const UserManagement: React.FC = () => {
                           value={formData.password}
                           onChange={handleInputChange}
                           required
-                          className="w-full pl-10 pr-4 py-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-300 transition-all duration-200 bg-gray-50 focus:bg-white"
+                          className=" text-black w-full pl-10 pr-4 py-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-300 transition-all duration-200 bg-gray-50 focus:bg-white"
                           placeholder="Enter password"
                         />
                       </div>
@@ -440,14 +464,15 @@ const UserManagement: React.FC = () => {
 
                     {/* Role Selection Field */}
                     <div>
-                      <label htmlFor="role" className="block text-sm font-semibold text-gray-700 mb-3">
-                        Role
+                      <label htmlFor="type" className="block text-sm font-semibold text-gray-700 mb-3">
+                        Type
                       </label>
                       <div className="relative">
                         <User className="h-5 w-5 text-indigo-400 absolute left-3 top-1/2 transform -translate-y-1/2" />
                         <select
-                          id="role"
-                          name="role"
+                          id="type"
+                          name="type"
+                          disabled={isReadonly}
                           className="w-full text-black pl-10 pr-4 py-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-300 transition-all duration-200 bg-gray-50 focus:bg-white appearance-none"
                         >
                           <option value="1">Người Tập</option>
@@ -467,21 +492,74 @@ const UserManagement: React.FC = () => {
                   >
                     Hủy
                   </button>
-                  <button
-                    type="submit"
-                    disabled={isLoading}
-                    className="px-8 py-3 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-lg hover:from-blue-700 hover:to-purple-700 transition-all duration-200 shadow-lg hover:shadow-xl font-medium"
-                  >
-                     {isLoading ? 'Đang thêm...' : 'Thêm người dùng'}
-                  </button>
+                  {modalMode !== 'view' && (
+                    <button
+                      type="submit"
+                      disabled={isLoading}
+                      className="px-8 py-3 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-lg hover:from-blue-700 hover:to-purple-700 transition-all duration-200 shadow-lg hover:shadow-xl font-medium"
+                    >
+                      {isLoading ? 'Đang lưu...' : modalMode === 'edit' ? 'Lưu thay đổi' : 'Thêm người dùng'}
+                    </button>
+                  )}
                 </div>
               </form>
             </div>
           </div>
         )}
+
+        {showViewModal && selectedUser && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center p-4" style={{ backgroundColor: 'rgba(0, 0, 0, 0.25)' }}>
+            <div className="bg-white rounded-2xl shadow-2xl w-full max-w-2xl max-h-[90vh] overflow-y-auto">
+
+              {/* Header */}
+              <div className="flex items-center justify-between p-6 border-b bg-gradient-to-r from-blue-50 to-purple-50">
+                <div className="flex items-center space-x-3">
+                  <div className="h-10 w-10 bg-blue-500 rounded-lg flex items-center justify-center">
+                    <User className="h-5 w-5 text-white" />
+                  </div>
+                  <h2 className="text-xl font-bold text-gray-800">Thông tin người dùng</h2>
+                </div>
+                <button
+                  onClick={() => setShowViewModal(false)}
+                  className="text-gray-400 hover:text-gray-600 p-1 hover:bg-white hover:bg-opacity-50 rounded-lg"
+                >
+                  <X className="h-6 w-6" />
+                </button>
+              </div>
+
+              {/* Body */}
+              <div className="p-6 space-y-4">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <div>
+                    <label className="text-sm font-semibold text-gray-700">Họ tên</label>
+                    <p className="mt-1 text-gray-900">{selectedUser.name}</p>
+                  </div>
+                  <div>
+                    <label className="text-sm font-semibold text-gray-700">Số điện thoại</label>
+                    <p className="mt-1 text-gray-900">{selectedUser.phoneNumber}</p>
+                  </div>
+                  <div>
+                    <label className="text-sm font-semibold text-gray-700">Email</label>
+                    <p className="mt-1 text-gray-900">{selectedUser.email}</p>
+                  </div>
+                  <div>
+                    <label className="text-sm font-semibold text-gray-700">Địa chỉ</label>
+                    <p className="mt-1 text-gray-900">{selectedUser.address}</p>
+                  </div>
+                  <div>
+                    <label className="text-sm font-semibold text-gray-700">Loại người dùng</label>
+                    <p className={`mt-1 text-sm font-semibold ${getTypeColor(selectedUser.type)}`}>
+                      {getTypeLabel(selectedUser.type)}
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
       </div>
     </div>
-      );
+  );
 };
 
 export default UserManagement;

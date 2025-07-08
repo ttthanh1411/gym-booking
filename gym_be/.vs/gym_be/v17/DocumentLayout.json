@@ -3,12 +3,12 @@
   "WorkspaceRootPath": "E:\\WorkSpace\\Project_Gym\\gym_be\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{F66A2388-6561-4225-BDCC-4E4E3B46F192}|gym_be\\gym_be.csproj|e:\\workspace\\project_gym\\gym_be\\gym_be\\models\\customer.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{F66A2388-6561-4225-BDCC-4E4E3B46F192}|gym_be\\gym_be.csproj|solutionrelative:gym_be\\models\\customer.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
       "AbsoluteMoniker": "D:0:0:{F66A2388-6561-4225-BDCC-4E4E3B46F192}|gym_be\\gym_be.csproj|e:\\workspace\\project_gym\\gym_be\\gym_be\\controllers\\customercontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{F66A2388-6561-4225-BDCC-4E4E3B46F192}|gym_be\\gym_be.csproj|solutionrelative:gym_be\\controllers\\customercontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{F66A2388-6561-4225-BDCC-4E4E3B46F192}|gym_be\\gym_be.csproj|e:\\workspace\\project_gym\\gym_be\\gym_be\\models\\customer.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{F66A2388-6561-4225-BDCC-4E4E3B46F192}|gym_be\\gym_be.csproj|solutionrelative:gym_be\\models\\customer.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{F66A2388-6561-4225-BDCC-4E4E3B46F192}|gym_be\\gym_be.csproj|e:\\workspace\\project_gym\\gym_be\\gym_be\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
@@ -30,7 +30,7 @@
       "DocumentGroups": [
         {
           "DockedWidth": 254,
-          "SelectedChildIndex": 5,
+          "SelectedChildIndex": 2,
           "Children": [
             {
               "$type": "Bookmark",
@@ -42,13 +42,13 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
+              "DocumentIndex": 0,
               "Title": "CustomerController.cs",
               "DocumentMoniker": "E:\\WorkSpace\\Project_Gym\\gym_be\\gym_be\\Controllers\\CustomerController.cs",
               "RelativeDocumentMoniker": "gym_be\\Controllers\\CustomerController.cs",
               "ToolTip": "E:\\WorkSpace\\Project_Gym\\gym_be\\gym_be\\Controllers\\CustomerController.cs",
               "RelativeToolTip": "gym_be\\Controllers\\CustomerController.cs",
-              "ViewState": "AgIAAA4AAAAAAAAAAAAQwCMAAAAJAAAAAAAAAA==",
+              "ViewState": "AgIAAEcAAAAAAAAAAAAiwFUAAABAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-07-08T13:43:02.646Z",
               "EditorCaption": ""
@@ -63,8 +63,7 @@
               "RelativeToolTip": "gym_be\\appsettings.json",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAkAAAAvAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
-              "WhenOpened": "2025-07-08T13:40:32.453Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-07-08T13:40:32.453Z"
             },
             {
               "$type": "Document",
@@ -76,12 +75,11 @@
               "RelativeToolTip": "gym_be\\Program.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAABUAAAAdAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-07-08T13:40:06.783Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-07-08T13:40:06.783Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 0,
+              "DocumentIndex": 1,
               "Title": "Customer.cs",
               "DocumentMoniker": "E:\\WorkSpace\\Project_Gym\\gym_be\\gym_be\\Models\\Customer.cs",
               "RelativeDocumentMoniker": "gym_be\\Models\\Customer.cs",
@@ -102,8 +100,7 @@
               "RelativeToolTip": "gym_be\\Models\\GymContext.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAqwAQAAAARAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-07-08T13:39:08.528Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-07-08T13:39:08.528Z"
             }
           ]
         }

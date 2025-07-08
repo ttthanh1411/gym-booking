@@ -50,8 +50,7 @@
               "RelativeToolTip": "gym_be\\Controllers\\CustomerController.cs",
               "ViewState": "AgIAAA4AAAAAAAAAAAAQwCMAAAAJAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-07-08T13:43:02.646Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-07-08T13:43:02.646Z"
             },
             {
               "$type": "Document",
@@ -63,8 +62,7 @@
               "RelativeToolTip": "gym_be\\appsettings.json",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAkAAAAvAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
-              "WhenOpened": "2025-07-08T13:40:32.453Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-07-08T13:40:32.453Z"
             },
             {
               "$type": "Document",
@@ -76,8 +74,7 @@
               "RelativeToolTip": "gym_be\\Program.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAABUAAAAdAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-07-08T13:40:06.783Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-07-08T13:40:06.783Z"
             },
             {
               "$type": "Document",
@@ -87,7 +84,7 @@
               "RelativeDocumentMoniker": "gym_be\\Models\\Customer.cs",
               "ToolTip": "E:\\WorkSpace\\Project_Gym\\gym_be\\gym_be\\Models\\Customer.cs",
               "RelativeToolTip": "gym_be\\Models\\Customer.cs",
-              "ViewState": "AgIAAAkAAAAAAAAAAAAAABUAAAAbAAAAAAAAAA==",
+              "ViewState": "AgIAAAkAAAAAAAAAAAAAABsAAAApAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-07-08T13:39:50.657Z",
               "EditorCaption": ""
@@ -102,8 +99,7 @@
               "RelativeToolTip": "gym_be\\Models\\GymContext.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAqwAQAAAARAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-07-08T13:39:08.528Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-07-08T13:39:08.528Z"
             }
           ]
         }
