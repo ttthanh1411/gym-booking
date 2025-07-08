@@ -7,7 +7,7 @@ export default class BaseService<T> {
     this.baseUrl = baseUrl;
   }
 
-  // 🟩 Lấy toàn bộ
+  // Lấy toàn bộ
   async getAll(): Promise<T[]> {
     const response = await fetch(`${this.baseUrl}`, {
       method: 'GET',
@@ -16,7 +16,7 @@ export default class BaseService<T> {
     return response.json();
   }
 
-  // 🟩 Lấy 1 theo ID
+  // Lấy 1 theo ID
   async getOne(id: string | number): Promise<T> {
     const response = await fetch(`${this.baseUrl}/${id}`, {
       method: 'GET',
@@ -25,7 +25,7 @@ export default class BaseService<T> {
     return response.json();
   }
 
-  // 🟩 Thêm mới
+  // Thêm mới
   async create(data: Partial<T>): Promise<T> {
     const response = await fetch(`${this.baseUrl}`, {
       method: 'POST',
