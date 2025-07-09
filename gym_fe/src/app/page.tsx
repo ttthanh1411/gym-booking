@@ -3,6 +3,7 @@
 import React, { useState } from 'react';
 import AdminLayout from './admin/admin';
 import UserManagement from './admin/customer/customer';
+// import CustomerPage from '../components/customer/CustomerPage';
 // import CustomerPage from './admin/customer/page';
 
 

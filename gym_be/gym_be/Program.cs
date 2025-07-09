@@ -1,11 +1,12 @@
 ﻿using gym_be.Models;
+using gym_be.Extensions;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddDbContext<GymContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
 // Add services to the container.
-
+builder.Services.AddRepositoriesAndServices();
 builder.Services.AddControllers();
 builder.Services.AddCors(options =>
 {

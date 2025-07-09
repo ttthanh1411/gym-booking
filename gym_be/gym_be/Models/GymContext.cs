@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using gym_be.Models.Entities;
+using Microsoft.EntityFrameworkCore;
 
 namespace gym_be.Models
 {

@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using gym_be.Models;
+using gym_be.Services;
+using gym_be.Models.Entities;
+using gym_be.Services.Interfaces;
 
 namespace gym_be.Controllers
 {
@@ -8,84 +10,66 @@ namespace gym_be.Controllers
     [Route("api/[controller]")]
     public class CustomerController : ControllerBase
     {
-        private readonly GymContext _context;
+        private readonly ICustomerService _service;
 
-        public CustomerController(GymContext context)
+        public CustomerController(ICustomerService service)
         {
-            _context = context;
+            _service = service;
         }
 
-        // ✅ GET: api/customer
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Customer>>> GetCustomers()
+        public async Task<IActionResult> GetCustomers()
         {
-            var customers = await _context.Customers.ToListAsync();
+            var customers = await _service.GetAllAsync();
             return Ok(customers);
         }
 
-        // ✅ GET: api/customer/{id}
         [HttpGet("{id}")]
-        public async Task<ActionResult<Customer>> GetCustomerById(Guid id)
+        public async Task<IActionResult> GetCustomerById(Guid id)
         {
-            var customer = await _context.Customers.FindAsync(id);
-            if (customer == null)
-            {
-                return NotFound();
-            }
+            var customer = await _service.GetByIdAsync(id);
+            if (customer == null) return NotFound();
             return Ok(customer);
         }
 
-        // ✅ POST: api/customer
         [HttpPost]
-        public async Task<ActionResult<Customer>> CreateCustomer([FromBody] Customer customer)
+        public async Task<IActionResult> CreateCustomer([FromBody] Customer customer)
         {
-            customer.CustomerID = Guid.NewGuid(); //UUID
-            customer.Status = 1;
-            _context.Customers.Add(customer);
-            await _context.SaveChangesAsync();
-
-            return CreatedAtAction(nameof(GetCustomerById),
-                new { id = customer.CustomerID },
-                customer);
+            var created = await _service.CreateAsync(customer);
+            return CreatedAtAction(nameof(GetCustomerById), new { id = created.CustomerID }, created);
         }
 
-        // ✅ DELETE: api/customer/{id}
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteCustomer(Guid id)
         {
-            var customer = await _context.Customers.FindAsync(id);
-            if (customer == null)
-            {
-                return NotFound();
-            }
-
-            _context.Customers.Remove(customer);
-            await _context.SaveChangesAsync();
-
-            return NoContent(); 
+            var deleted = await _service.DeleteAsync(id);
+            return deleted ? NoContent() : NotFound();
         }
 
-        // ✅ PUT: api/customer/{id}
-        [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateCustomer(Guid id, [FromBody] Customer updatedCustomer)
+
+        [HttpGet("paged")]
+        public async Task<IActionResult> GetPagedCustomers(
+            [FromQuery] string? keyword = null,
+            [FromQuery] int page = 1,
+            [FromQuery] int pageSize = 10)
         {
-            var customer = await _context.Customers.FindAsync(id);
-            if (customer == null)
+            var (data, total) = await _service.GetPagedAsync(keyword, page, pageSize);
+
+            return Ok(new
             {
-                return NotFound();
-            }
+                totalItems = total,
+                page,
+                pageSize,
+                totalPages = (int)Math.Ceiling((double)total / pageSize),
+                items = data
+            });
+        }
 
-            customer.Name = updatedCustomer.Name;
-            customer.PhoneNumber = updatedCustomer.PhoneNumber;
-            customer.Address = updatedCustomer.Address;
-            customer.Email = updatedCustomer.Email;
-            customer.Password = updatedCustomer.Password;
-            customer.Status = updatedCustomer.Status;
-
-            _context.Entry(customer).State = EntityState.Modified;
-            await _context.SaveChangesAsync();
-
-            return NoContent();
+        [HttpGet("options")]
+        public async Task<IActionResult> GetOptions()
+        {
+            var options = await _service.GetOptionsAsync();
+            return Ok(options);
         }
     }
 }

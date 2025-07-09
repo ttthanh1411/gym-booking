@@ -20,6 +20,9 @@ const UserManagement: React.FC = () => {
   const [modalMode, setModalMode] = useState<'view' | 'edit' | 'add' | null>(null);
   const [selectedUser, setSelectedUser] = useState<Customer | null>(null);
   const [notifications, setNotifications] = useState<ToastNotification[]>([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [pageSize, setPageSize] = useState(5);
+  const [totalPages, setTotalPages] = useState(0);
   const [formData, setFormData] = useState({
     name: '',
     phoneNumber: '',
@@ -29,13 +32,23 @@ const UserManagement: React.FC = () => {
   });
   const isReadonly = modalMode === 'view';
   const fetchUsers = async () => {
-    const res = await customerService.getAll();
-    setUsers(res);
+    try {
+      const res = await customerService.getPaged({
+        keyword: searchTerm,
+        page: currentPage,
+        pageSize: pageSize
+      });
+      setUsers(res.items);
+      setTotalPages(res.totalPages);
+    } catch (err) {
+      console.error('Lỗi khi fetch users:', err);
+      showNotification('error', 'Không thể tải danh sách người dùng');
+    }
   };
 
   useEffect(() => {
     fetchUsers();
-  }, []);
+  }, [searchTerm, currentPage, pageSize]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -167,7 +180,7 @@ const UserManagement: React.FC = () => {
             <h1 className="text-2xl font-bold text-gray-900">User Management</h1>
           </div>
           <button
-            onClick={() => [setShowAddModal(true),setModalMode('add')]}
+            onClick={() => [setShowAddModal(true), setModalMode('add')]}
             className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors flex items-center space-x-2"
           >
             <Plus className="h-4 w-4" />
@@ -183,10 +196,10 @@ const UserManagement: React.FC = () => {
                 <Search className="h-5 w-5 text-gray-800 absolute left-3 top-1/2 transform -translate-y-1/2" />
                 <input
                   type="text"
-                  placeholder="Search users..."
+                  placeholder="Tìm người dùng"
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
-                  className="pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  className="text-black pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                 />
               </div>
 
@@ -314,251 +327,263 @@ const UserManagement: React.FC = () => {
         <div className="bg-white px-6 py-3 rounded-lg shadow-sm border border-gray-200">
           <div className="flex items-center justify-between">
             <div className="text-sm text-gray-700">
-              Xem <span className="font-medium">1</span> tới <span className="font-medium">5</span> của{' '}
-              <span className="font-medium">12</span> trang
+              <div className="text-sm text-gray-700">
+                Trang <span className="font-medium">{currentPage}</span> / <span className="font-medium">{totalPages}</span>
+              </div>
             </div>
             <div className="text-black flex items-center space-x-2">
-              <button className="text-black px-3 py-1 border border-gray-300 rounded-md hover:bg-gray-50 transition-colors">
+              <button
+                onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
+                disabled={currentPage === 1}
+                className="text-black px-3 py-1 border border-gray-300 rounded-md hover:bg-gray-50 transition-colors">
                 Quay lại
               </button>
-              <button className="px-3 py-1 bg-blue-600 text-white rounded-md">1</button>
-              <button className="px-3 py-1 border border-gray-300 rounded-md hover:bg-gray-50 transition-colors">
-                2
+              {Array.from({ length: totalPages }, (_, i) => i + 1).map((pageNum) => (
+                <button
+                  key={pageNum}
+                  onClick={() => setCurrentPage(pageNum)}
+                  className={`px-3 py-1 rounded-md ${pageNum === currentPage ? 'bg-blue-600 text-white' : 'border border-gray-300'}`}
+                >
+                  {pageNum}
+                </button>
+              ))}
+            <button
+              onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
+              disabled={currentPage === totalPages}
+              className="px-3 py-1 border border-gray-300 rounded-md hover:bg-gray-50 transition-colors">
+              Tiếp theo
+            </button>
+          </div>
+        </div>
+      </div>
+
+      {/* Add User Modal */}
+      {showAddModal && (
+        <div className="fixed inset-0 flex items-center justify-center z-50 p-4" style={{ backgroundColor: 'rgba(0, 0, 0, 0.25)' }}>
+          <div className="bg-white rounded-2xl shadow-2xl w-full max-w-4xl max-h-[90vh] overflow-y-auto">
+            {/* Modal Header */}
+            <div className="flex items-center justify-between p-6 border-b border-gray-100 bg-gradient-to-r from-blue-50 to-purple-50">
+              <div className="flex items-center space-x-3">
+                <div className="h-10 w-10 bg-gradient-to-r from-blue-500 to-purple-600 rounded-lg flex items-center justify-center">
+                  <User className="h-5 w-5 text-white" />
+                </div>
+                <h2 className="text-xl font-bold text-gray-800">
+                  {modalMode === 'view' ? 'Xem thông tin người dùng' : modalMode === 'edit' ? 'Sửa người dùng' : 'Thêm người dùng'}
+                </h2>
+              </div>
+              <button
+                onClick={handleCloseModal}
+                className="text-gray-400 hover:text-gray-600 transition-colors p-1 hover:bg-white hover:bg-opacity-50 rounded-lg"
+              >
+                <X className="h-6 w-6" />
               </button>
-              <button className="px-3 py-1 border border-gray-300 rounded-md hover:bg-gray-50 transition-colors">
-                Tiếp theo
+            </div>
+
+            {/* Modal Body */}
+            <form onSubmit={handleSubmit} className="p-8 bg-white">
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                {/* Left Column */}
+                <div className="space-y-6">
+                  {/* Name Field */}
+                  <div>
+                    <label htmlFor="name" className="block text-sm font-semibold text-gray-700 mb-3">
+                      Họ và Tên
+                    </label>
+                    <div className="relative">
+                      <User className="h-5 w-5 text-blue-400 absolute left-3 top-1/2 transform -translate-y-1/2" />
+                      <input
+                        type="text"
+                        id="name"
+                        name="name"
+                        value={formData.name}
+                        onChange={handleInputChange}
+                        required
+                        className="text-black w-full pl-10 pr-4 py-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-300 transition-all duration-200 bg-gray-50 focus:bg-white"
+                        placeholder="Enter full name"
+                      />
+                    </div>
+                  </div>
+
+                  {/* Phone Number Field */}
+                  <div>
+                    <label htmlFor="phoneNumber" className="block text-sm font-semibold text-gray-700 mb-3">
+                      Số điện thoại
+                    </label>
+                    <div className="relative">
+                      <Phone className="h-5 w-5 text-green-400 absolute left-3 top-1/2 transform -translate-y-1/2" />
+                      <input
+                        type="tel"
+                        id="phoneNumber"
+                        name="phoneNumber"
+                        value={formData.phoneNumber}
+                        onChange={handleInputChange}
+                        required
+                        className="text-black  w-full pl-10 pr-4 py-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-300 transition-all duration-200 bg-gray-50 focus:bg-white"
+                        placeholder="Enter phone number"
+                      />
+                    </div>
+                  </div>
+
+                  {/* Address Field */}
+                  <div>
+                    <label htmlFor="address" className="block text-sm font-semibold text-gray-700 mb-3">
+                      Địa chỉ
+                    </label>
+                    <div className="relative">
+                      <MapPin className="h-5 w-5 text-red-400 absolute left-3 top-1/2 transform -translate-y-1/2" />
+                      <input
+                        type="text"
+                        id="address"
+                        name="address"
+                        value={formData.address}
+                        onChange={handleInputChange}
+                        required
+                        className="text-black  w-full pl-10 pr-4 py-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-300 transition-all duration-200 bg-gray-50 focus:bg-white"
+                        placeholder="Enter address"
+                      />
+                    </div>
+                  </div>
+                </div>
+
+                {/* Right Column */}
+                <div className="space-y-6">
+                  {/* Email Field */}
+                  <div>
+                    <label htmlFor="email" className="block text-sm font-semibold text-gray-700 mb-3">
+                      Email
+                    </label>
+                    <div className="relative">
+                      <Mail className="h-5 w-5 text-purple-400 absolute left-3 top-1/2 transform -translate-y-1/2" />
+                      <input
+                        type="email"
+                        id="email"
+                        name="email"
+                        value={formData.email}
+                        onChange={handleInputChange}
+                        required
+                        className="text-black w-full pl-10 pr-4 py-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-300 transition-all duration-200 bg-gray-50 focus:bg-white"
+                        placeholder="Enter email address"
+                      />
+                    </div>
+                  </div>
+
+                  {/* Password Field */}
+                  <div>
+                    <label htmlFor="password" className="block text-sm font-semibold text-gray-700 mb-3">
+                      Password
+                    </label>
+                    <div className="relative text-gray-500">
+                      <Lock className="h-5 w-5 text-orange-400 absolute left-3 top-1/2 transform -translate-y-1/2" />
+                      <input
+                        type="password"
+                        id="password"
+                        name="password"
+                        value={formData.password}
+                        onChange={handleInputChange}
+                        required
+                        className=" text-black w-full pl-10 pr-4 py-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-300 transition-all duration-200 bg-gray-50 focus:bg-white"
+                        placeholder="Enter password"
+                      />
+                    </div>
+                  </div>
+
+                  {/* Role Selection Field */}
+                  <div>
+                    <label htmlFor="type" className="block text-sm font-semibold text-gray-700 mb-3">
+                      Type
+                    </label>
+                    <div className="relative">
+                      <User className="h-5 w-5 text-indigo-400 absolute left-3 top-1/2 transform -translate-y-1/2" />
+                      <select
+                        id="type"
+                        name="type"
+                        disabled={isReadonly}
+                        className="w-full text-black pl-10 pr-4 py-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-300 transition-all duration-200 bg-gray-50 focus:bg-white appearance-none"
+                      >
+                        <option value="1">Người Tập</option>
+                        <option value="2">PT</option>
+                      </select>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Modal Footer */}
+              <div className="flex items-center justify-end space-x-4 pt-8 mt-8 border-t border-gray-100 bg-gray-50 -mx-8 px-8 py-6 rounded-b-2xl">
+                <button
+                  type="button"
+                  onClick={handleCloseModal}
+                  className="px-6 py-3 border border-gray-300 text-gray-700 rounded-lg hover:bg-white hover:border-gray-400 transition-all duration-200 font-medium"
+                >
+                  Hủy
+                </button>
+                {modalMode !== 'view' && (
+                  <button
+                    type="submit"
+                    disabled={isLoading}
+                    className="px-8 py-3 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-lg hover:from-blue-700 hover:to-purple-700 transition-all duration-200 shadow-lg hover:shadow-xl font-medium"
+                  >
+                    {isLoading ? 'Đang lưu...' : modalMode === 'edit' ? 'Lưu thay đổi' : 'Thêm người dùng'}
+                  </button>
+                )}
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {showViewModal && selectedUser && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4" style={{ backgroundColor: 'rgba(0, 0, 0, 0.25)' }}>
+          <div className="bg-white rounded-2xl shadow-2xl w-full max-w-2xl max-h-[90vh] overflow-y-auto">
+
+            {/* Header */}
+            <div className="flex items-center justify-between p-6 border-b bg-gradient-to-r from-blue-50 to-purple-50">
+              <div className="flex items-center space-x-3">
+                <div className="h-10 w-10 bg-blue-500 rounded-lg flex items-center justify-center">
+                  <User className="h-5 w-5 text-white" />
+                </div>
+                <h2 className="text-xl font-bold text-gray-800">Thông tin người dùng</h2>
+              </div>
+              <button
+                onClick={() => setShowViewModal(false)}
+                className="text-gray-400 hover:text-gray-600 p-1 hover:bg-white hover:bg-opacity-50 rounded-lg"
+              >
+                <X className="h-6 w-6" />
               </button>
+            </div>
+
+            {/* Body */}
+            <div className="p-6 space-y-4">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                  <label className="text-sm font-semibold text-gray-700">Họ tên</label>
+                  <p className="mt-1 text-gray-900">{selectedUser.name}</p>
+                </div>
+                <div>
+                  <label className="text-sm font-semibold text-gray-700">Số điện thoại</label>
+                  <p className="mt-1 text-gray-900">{selectedUser.phoneNumber}</p>
+                </div>
+                <div>
+                  <label className="text-sm font-semibold text-gray-700">Email</label>
+                  <p className="mt-1 text-gray-900">{selectedUser.email}</p>
+                </div>
+                <div>
+                  <label className="text-sm font-semibold text-gray-700">Địa chỉ</label>
+                  <p className="mt-1 text-gray-900">{selectedUser.address}</p>
+                </div>
+                <div>
+                  <label className="text-sm font-semibold text-gray-700">Loại người dùng</label>
+                  <p className={`mt-1 text-sm font-semibold ${getTypeColor(selectedUser.type)}`}>
+                    {getTypeLabel(selectedUser.type)}
+                  </p>
+                </div>
+              </div>
             </div>
           </div>
         </div>
-
-        {/* Add User Modal */}
-        {showAddModal && (
-          <div className="fixed inset-0 flex items-center justify-center z-50 p-4" style={{ backgroundColor: 'rgba(0, 0, 0, 0.25)' }}>
-            <div className="bg-white rounded-2xl shadow-2xl w-full max-w-4xl max-h-[90vh] overflow-y-auto">
-              {/* Modal Header */}
-              <div className="flex items-center justify-between p-6 border-b border-gray-100 bg-gradient-to-r from-blue-50 to-purple-50">
-                <div className="flex items-center space-x-3">
-                  <div className="h-10 w-10 bg-gradient-to-r from-blue-500 to-purple-600 rounded-lg flex items-center justify-center">
-                    <User className="h-5 w-5 text-white" />
-                  </div>
-                  <h2 className="text-xl font-bold text-gray-800">
-                    {modalMode === 'view' ? 'Xem thông tin người dùng' : modalMode === 'edit' ? 'Sửa người dùng' : 'Thêm người dùng'}
-                  </h2>
-                </div>
-                <button
-                  onClick={handleCloseModal}
-                  className="text-gray-400 hover:text-gray-600 transition-colors p-1 hover:bg-white hover:bg-opacity-50 rounded-lg"
-                >
-                  <X className="h-6 w-6" />
-                </button>
-              </div>
-
-              {/* Modal Body */}
-              <form onSubmit={handleSubmit} className="p-8 bg-white">
-                <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-                  {/* Left Column */}
-                  <div className="space-y-6">
-                    {/* Name Field */}
-                    <div>
-                      <label htmlFor="name" className="block text-sm font-semibold text-gray-700 mb-3">
-                        Họ và Tên
-                      </label>
-                      <div className="relative">
-                        <User className="h-5 w-5 text-blue-400 absolute left-3 top-1/2 transform -translate-y-1/2" />
-                        <input
-                          type="text"
-                          id="name"
-                          name="name"
-                          value={formData.name}
-                          onChange={handleInputChange}
-                          required
-                          className="text-black w-full pl-10 pr-4 py-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-300 transition-all duration-200 bg-gray-50 focus:bg-white"
-                          placeholder="Enter full name"
-                        />
-                      </div>
-                    </div>
-
-                    {/* Phone Number Field */}
-                    <div>
-                      <label htmlFor="phoneNumber" className="block text-sm font-semibold text-gray-700 mb-3">
-                        Số điện thoại
-                      </label>
-                      <div className="relative">
-                        <Phone className="h-5 w-5 text-green-400 absolute left-3 top-1/2 transform -translate-y-1/2" />
-                        <input
-                          type="tel"
-                          id="phoneNumber"
-                          name="phoneNumber"
-                          value={formData.phoneNumber}
-                          onChange={handleInputChange}
-                          required
-                          className="text-black  w-full pl-10 pr-4 py-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-300 transition-all duration-200 bg-gray-50 focus:bg-white"
-                          placeholder="Enter phone number"
-                        />
-                      </div>
-                    </div>
-
-                    {/* Address Field */}
-                    <div>
-                      <label htmlFor="address" className="block text-sm font-semibold text-gray-700 mb-3">
-                        Địa chỉ
-                      </label>
-                      <div className="relative">
-                        <MapPin className="h-5 w-5 text-red-400 absolute left-3 top-1/2 transform -translate-y-1/2" />
-                        <input
-                          type="text"
-                          id="address"
-                          name="address"
-                          value={formData.address}
-                          onChange={handleInputChange}
-                          required
-                          className="text-black  w-full pl-10 pr-4 py-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-300 transition-all duration-200 bg-gray-50 focus:bg-white"
-                          placeholder="Enter address"
-                        />
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Right Column */}
-                  <div className="space-y-6">
-                    {/* Email Field */}
-                    <div>
-                      <label htmlFor="email" className="block text-sm font-semibold text-gray-700 mb-3">
-                        Email
-                      </label>
-                      <div className="relative">
-                        <Mail className="h-5 w-5 text-purple-400 absolute left-3 top-1/2 transform -translate-y-1/2" />
-                        <input
-                          type="email"
-                          id="email"
-                          name="email"
-                          value={formData.email}
-                          onChange={handleInputChange}
-                          required
-                          className="text-black w-full pl-10 pr-4 py-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-300 transition-all duration-200 bg-gray-50 focus:bg-white"
-                          placeholder="Enter email address"
-                        />
-                      </div>
-                    </div>
-
-                    {/* Password Field */}
-                    <div>
-                      <label htmlFor="password" className="block text-sm font-semibold text-gray-700 mb-3">
-                        Password
-                      </label>
-                      <div className="relative text-gray-500">
-                        <Lock className="h-5 w-5 text-orange-400 absolute left-3 top-1/2 transform -translate-y-1/2" />
-                        <input
-                          type="password"
-                          id="password"
-                          name="password"
-                          value={formData.password}
-                          onChange={handleInputChange}
-                          required
-                          className=" text-black w-full pl-10 pr-4 py-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-300 transition-all duration-200 bg-gray-50 focus:bg-white"
-                          placeholder="Enter password"
-                        />
-                      </div>
-                    </div>
-
-                    {/* Role Selection Field */}
-                    <div>
-                      <label htmlFor="type" className="block text-sm font-semibold text-gray-700 mb-3">
-                        Type
-                      </label>
-                      <div className="relative">
-                        <User className="h-5 w-5 text-indigo-400 absolute left-3 top-1/2 transform -translate-y-1/2" />
-                        <select
-                          id="type"
-                          name="type"
-                          disabled={isReadonly}
-                          className="w-full text-black pl-10 pr-4 py-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-300 transition-all duration-200 bg-gray-50 focus:bg-white appearance-none"
-                        >
-                          <option value="1">Người Tập</option>
-                          <option value="2">PT</option>
-                        </select>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-
-                {/* Modal Footer */}
-                <div className="flex items-center justify-end space-x-4 pt-8 mt-8 border-t border-gray-100 bg-gray-50 -mx-8 px-8 py-6 rounded-b-2xl">
-                  <button
-                    type="button"
-                    onClick={handleCloseModal}
-                    className="px-6 py-3 border border-gray-300 text-gray-700 rounded-lg hover:bg-white hover:border-gray-400 transition-all duration-200 font-medium"
-                  >
-                    Hủy
-                  </button>
-                  {modalMode !== 'view' && (
-                    <button
-                      type="submit"
-                      disabled={isLoading}
-                      className="px-8 py-3 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-lg hover:from-blue-700 hover:to-purple-700 transition-all duration-200 shadow-lg hover:shadow-xl font-medium"
-                    >
-                      {isLoading ? 'Đang lưu...' : modalMode === 'edit' ? 'Lưu thay đổi' : 'Thêm người dùng'}
-                    </button>
-                  )}
-                </div>
-              </form>
-            </div>
-          </div>
-        )}
-
-        {showViewModal && selectedUser && (
-          <div className="fixed inset-0 z-50 flex items-center justify-center p-4" style={{ backgroundColor: 'rgba(0, 0, 0, 0.25)' }}>
-            <div className="bg-white rounded-2xl shadow-2xl w-full max-w-2xl max-h-[90vh] overflow-y-auto">
-
-              {/* Header */}
-              <div className="flex items-center justify-between p-6 border-b bg-gradient-to-r from-blue-50 to-purple-50">
-                <div className="flex items-center space-x-3">
-                  <div className="h-10 w-10 bg-blue-500 rounded-lg flex items-center justify-center">
-                    <User className="h-5 w-5 text-white" />
-                  </div>
-                  <h2 className="text-xl font-bold text-gray-800">Thông tin người dùng</h2>
-                </div>
-                <button
-                  onClick={() => setShowViewModal(false)}
-                  className="text-gray-400 hover:text-gray-600 p-1 hover:bg-white hover:bg-opacity-50 rounded-lg"
-                >
-                  <X className="h-6 w-6" />
-                </button>
-              </div>
-
-              {/* Body */}
-              <div className="p-6 space-y-4">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  <div>
-                    <label className="text-sm font-semibold text-gray-700">Họ tên</label>
-                    <p className="mt-1 text-gray-900">{selectedUser.name}</p>
-                  </div>
-                  <div>
-                    <label className="text-sm font-semibold text-gray-700">Số điện thoại</label>
-                    <p className="mt-1 text-gray-900">{selectedUser.phoneNumber}</p>
-                  </div>
-                  <div>
-                    <label className="text-sm font-semibold text-gray-700">Email</label>
-                    <p className="mt-1 text-gray-900">{selectedUser.email}</p>
-                  </div>
-                  <div>
-                    <label className="text-sm font-semibold text-gray-700">Địa chỉ</label>
-                    <p className="mt-1 text-gray-900">{selectedUser.address}</p>
-                  </div>
-                  <div>
-                    <label className="text-sm font-semibold text-gray-700">Loại người dùng</label>
-                    <p className={`mt-1 text-sm font-semibold ${getTypeColor(selectedUser.type)}`}>
-                      {getTypeLabel(selectedUser.type)}
-                    </p>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        )}
-      </div>
+      )}
     </div>
+    </div >
   );
 };
 

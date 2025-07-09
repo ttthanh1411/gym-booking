@@ -2,7 +2,7 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace gym_be.Models
+namespace gym_be.Models.Entities
 {
     [Table("customer")]
     public class Customer
