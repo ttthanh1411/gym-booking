@@ -60,7 +60,6 @@ const UserManagement: React.FC = () => {
   }, [searchTerm, currentPage, pageSize]);
 
   const handleSubmit = async (e: React.FormEvent) => {
-    debugger
     e.preventDefault();
     setIsLoading(true);
     try {

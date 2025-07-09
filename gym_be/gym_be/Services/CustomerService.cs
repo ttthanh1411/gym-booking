@@ -93,6 +93,7 @@ namespace gym_be.Services
             existing.Email = updatedCustomer.Email;
             existing.PhoneNumber = updatedCustomer.PhoneNumber;
             existing.Address = updatedCustomer.Address;
+            existing.Type = updatedCustomer.Type;
             // Các trường khác nếu có...
 
             await _repository.SaveChangesAsync();
