@@ -1,9 +1,9 @@
 export interface Schedule {
-  scheduleid: string;
-  dayofweek: string;
-  maxparticipants: number;
-  starttime: string;
-  endtime: string;
+  scheduleID: string;
+  dayOfWeek: string;
+  startTime: string;
+  endTime: string;
+  maxParticipants: number;
 }
 
 export interface ScheduleFormData {

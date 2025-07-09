@@ -43,7 +43,6 @@ const ScheduleManagement: React.FC = () => {
                 params.dayofweek = filterDay;
             }
             const res = await scheduleService.getPaged(params);
-
             setSchedules(res.items);
             setTotalPages(res.totalPages);
         } catch (err) {
@@ -51,7 +50,7 @@ const ScheduleManagement: React.FC = () => {
             showNotification('error', 'Không thể tải danh sách lịch trình');
         }
     };
-    debugger
+
     useEffect(() => {
         fetchSchedules();
     }, [searchTerm, currentPage, pageSize, filterDay]);
@@ -59,14 +58,15 @@ const ScheduleManagement: React.FC = () => {
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         setIsLoading(true);
-        const payload = {
-            ...formData,
-            starttime: new Date(formData.starttime).toISOString(),
-            endtime: new Date(formData.endtime).toISOString(),
+        const payload: Partial<Schedule> = {
+            dayOfWeek: formData.dayofweek,
+            maxParticipants: formData.maxparticipants,
+            startTime: new Date(formData.starttime).toISOString(),
+            endTime: new Date(formData.endtime).toISOString(),
         };
         try {
             if (modalMode === 'edit' && selectedSchedule) {
-                await scheduleService.update(selectedSchedule.scheduleid, payload);
+                await scheduleService.update(selectedSchedule.scheduleID, payload);
                 showNotification('success', 'Cập nhật lịch trình thành công!');
             } else {
                 await scheduleService.create(payload);
@@ -92,15 +92,13 @@ const ScheduleManagement: React.FC = () => {
     };
 
     const handleDelete = async (id: string) => {
-        if (window.confirm('Bạn có chắc chắn muốn xóa lịch trình này?')) {
-            try {
-                await scheduleService.delete(id);
-                fetchSchedules();
-                showNotification('success', 'Xóa lịch trình thành công!');
-            } catch (err) {
-                showNotification('error', 'Có lỗi xảy ra khi xóa lịch trình');
-                console.error('Delete failed:', err);
-            }
+        try {
+            await scheduleService.delete(id);
+            fetchSchedules();
+            showNotification('success', 'Xóa lịch trình thành công!');
+        } catch (err) {
+            showNotification('error', 'Có lỗi xảy ra khi xóa lịch trình');
+            console.error('Delete failed:', err);
         }
     };
 
@@ -136,13 +134,13 @@ const ScheduleManagement: React.FC = () => {
 
     const getDayColor = (day: string) => {
         const colors = {
-            'Monday': 'bg-blue-100 text-blue-800',
-            'Tuesday': 'bg-green-100 text-green-800',
-            'Wednesday': 'bg-yellow-100 text-yellow-800',
-            'Thursday': 'bg-purple-100 text-purple-800',
-            'Friday': 'bg-red-100 text-red-800',
-            'Saturday': 'bg-orange-100 text-orange-800',
-            'Sunday': 'bg-pink-100 text-pink-800'
+            'Thứ 2': 'bg-blue-100 text-blue-800',
+            'Thứ 3': 'bg-green-100 text-green-800',
+            'Thứ 4': 'bg-yellow-100 text-yellow-800',
+            'Thứ 5': 'bg-purple-100 text-purple-800',
+            'Thứ 6': 'bg-red-100 text-red-800',
+            'Thứ 7': 'bg-orange-100 text-orange-800',
+            'Chủ Nhật': 'bg-pink-100 text-pink-800'
         };
         return colors[day as keyof typeof colors] || 'bg-gray-100 text-gray-800';
     };
@@ -287,17 +285,17 @@ const ScheduleManagement: React.FC = () => {
                                     </tr>
                                 ) : (
                                     schedules.map((schedule) => (
-                                        <tr key={schedule.scheduleid} className="hover:bg-gray-50 transition-colors">
+                                        <tr key={schedule.scheduleID} className="hover:bg-gray-50 transition-colors">
                                             <td className="px-6 py-4 whitespace-nowrap">
                                                 <div className="flex items-center">
                                                     <div className="h-10 w-10 bg-gradient-to-r from-blue-500 to-purple-600 rounded-lg flex items-center justify-center">
                                                         <CalendarDays className="h-5 w-5 text-white" />
                                                     </div>
                                                     <div className="ml-4">
-                                                        <span className={`inline-flex px-3 py-1 text-xs font-semibold rounded-full ${getDayColor(schedule.dayofweek)}`}>
-                                                            {schedule.dayofweek}
+                                                        <span className={`inline-flex px-3 py-1 text-xs font-semibold rounded-full ${getDayColor(schedule.dayOfWeek)}`}>
+                                                            {schedule.dayOfWeek}
                                                         </span>
-                                                        <div className="text-sm text-gray-500 mt-1">ID: {schedule.scheduleid}</div>
+                                                        <div className="text-sm text-gray-500 mt-1">ID: {schedule.scheduleID}</div>
                                                     </div>
                                                 </div>
                                             </td>
@@ -305,7 +303,7 @@ const ScheduleManagement: React.FC = () => {
                                                 <div className="flex items-center justify-center space-x-2">
                                                     <Clock className="h-4 w-4 text-gray-400" />
                                                     <span className="text-sm font-medium text-gray-900">
-                                                        {formatTime(schedule.starttime)} - {formatTime(schedule.endtime)}
+                                                        {formatTime(schedule.startTime)} - {formatTime(schedule.endTime)}
                                                     </span>
                                                 </div>
                                             </td>
@@ -313,7 +311,7 @@ const ScheduleManagement: React.FC = () => {
                                                 <div className="flex items-center justify-center space-x-2">
                                                     <Users className="h-4 w-4 text-gray-400" />
                                                     <span className="text-sm font-medium text-gray-900">
-                                                        {schedule.maxparticipants} người
+                                                        {schedule.maxParticipants} người
                                                     </span>
                                                 </div>
                                             </td>
@@ -332,10 +330,10 @@ const ScheduleManagement: React.FC = () => {
                                                         onClick={() => {
                                                             setSelectedSchedule(schedule);
                                                             setFormData({
-                                                                dayofweek: schedule.dayofweek,
-                                                                maxparticipants: schedule.maxparticipants,
-                                                                starttime: schedule.starttime,
-                                                                endtime: schedule.endtime,
+                                                                dayofweek: schedule.dayOfWeek,
+                                                                maxparticipants: schedule.maxParticipants,
+                                                                starttime: schedule.startTime,
+                                                                endtime: schedule.endTime,
                                                             });
                                                             setModalMode('edit');
                                                             setShowAddModal(true);
@@ -345,7 +343,7 @@ const ScheduleManagement: React.FC = () => {
                                                         <Edit2 className="h-4 w-4" />
                                                     </button>
                                                     <button
-                                                        onClick={() => handleDelete(schedule.scheduleid)}
+                                                        onClick={() => handleDelete(schedule.scheduleID)}
                                                         className="text-red-600 hover:text-red-900 transition-colors p-2 hover:bg-red-50 rounded-lg"
                                                     >
                                                         <Trash2 className="h-4 w-4" />
@@ -391,9 +389,10 @@ const ScheduleManagement: React.FC = () => {
                             </button>
                             {Array.from({ length: Math.min(5, totalPages) }, (_, i) => {
                                 const pageNum = i + Math.max(1, currentPage - 2);
+                                if (pageNum > totalPages) return null;
                                 return pageNum <= totalPages ? (
                                     <button
-                                        key={pageNum}
+                                        key={`page-${pageNum}`}
                                         onClick={() => setCurrentPage(pageNum)}
                                         className={`px-3 py-2 rounded-md transition-colors ${pageNum === currentPage
                                             ? 'bg-blue-600 text-white'
@@ -417,7 +416,7 @@ const ScheduleManagement: React.FC = () => {
 
                 {/* Add/Edit Schedule Modal */}
                 {showAddModal && (
-                    <div className="fixed inset-0 flex items-center justify-center z-50 p-4 bg-black bg-opacity-50" style={{ backgroundColor: 'rgba(0, 0, 0, 0.25)' }}>
+                    <div className="fixed inset-0 flex items-center justify-center z-50 p-4" style={{ backgroundColor: 'rgba(0, 0, 0, 0.25)' }}>
                         <div className="bg-white rounded-2xl shadow-2xl w-full max-w-2xl max-h-[90vh] overflow-y-auto">
                             {/* Modal Header */}
                             <div className="flex items-center justify-between p-6 border-b border-gray-100 bg-gradient-to-r from-blue-50 to-purple-50">
@@ -573,14 +572,14 @@ const ScheduleManagement: React.FC = () => {
                                         <div>
                                             <label className="text-sm font-semibold text-gray-700">ID lịch trình</label>
                                             <p className="mt-1 text-gray-900 font-mono text-sm bg-gray-50 px-3 py-2 rounded-lg">
-                                                {selectedSchedule.scheduleid}
+                                                {selectedSchedule.scheduleID}
                                             </p>
                                         </div>
                                         <div>
                                             <label className="text-sm font-semibold text-gray-700">Ngày trong tuần</label>
                                             <div className="mt-1">
-                                                <span className={`inline-flex px-3 py-1 text-sm font-semibold rounded-full ${getDayColor(selectedSchedule.dayofweek)}`}>
-                                                    {selectedSchedule.dayofweek}
+                                                <span className={`inline-flex px-3 py-1 text-sm font-semibold rounded-full ${getDayColor(selectedSchedule.dayOfWeek)}`}>
+                                                    {selectedSchedule.dayOfWeek}
                                                 </span>
                                             </div>
                                         </div>
@@ -591,7 +590,7 @@ const ScheduleManagement: React.FC = () => {
                                             <div className="mt-1 flex items-center space-x-2">
                                                 <Clock className="h-4 w-4 text-gray-400" />
                                                 <span className="text-gray-900 font-medium">
-                                                    {formatTime(selectedSchedule.starttime)} - {formatTime(selectedSchedule.endtime)}
+                                                    {formatTime(selectedSchedule.startTime)} - {formatTime(selectedSchedule.endTime)}
                                                 </span>
                                             </div>
                                         </div>
@@ -600,7 +599,7 @@ const ScheduleManagement: React.FC = () => {
                                             <div className="mt-1 flex items-center space-x-2">
                                                 <Users className="h-4 w-4 text-gray-400" />
                                                 <span className="text-gray-900 font-medium">
-                                                    {selectedSchedule.maxparticipants} người
+                                                    {selectedSchedule.maxParticipants} người
                                                 </span>
                                             </div>
                                         </div>
