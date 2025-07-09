@@ -23,13 +23,21 @@ const UserManagement: React.FC = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [pageSize, setPageSize] = useState(5);
   const [totalPages, setTotalPages] = useState(0);
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState<{
+    name: string;
+    phoneNumber: string;
+    address: string;
+    email: string;
+    password?: string;
+    type: number;
+  }>({
     name: '',
     phoneNumber: '',
     address: '',
     email: '',
+    type: 0,
     password: '',
-    type: 1,
+    
   });
   const isReadonly = modalMode === 'view';
   const fetchUsers = async () => {
@@ -57,6 +65,10 @@ const UserManagement: React.FC = () => {
     setIsLoading(true);
     try {
       if (modalMode === 'edit' && selectedUser) {
+        const updatedData = { ...formData };
+        if (!updatedData.password?.trim()) {
+          delete updatedData.password;
+        }
         await customerService.update(selectedUser.customerID, formData);
         showNotification('success', 'Cập nhật người dùng thành công!');
       } else {
@@ -66,7 +78,7 @@ const UserManagement: React.FC = () => {
 
       fetchUsers();
       setShowAddModal(false);
-      setFormData({ name: '', phoneNumber: '', address: '', email: '', password: '', type: 1 });
+      setFormData({ name: '', phoneNumber: '', address: '', email: '', password: '', type: 0 });
       setSelectedUser(null);
       setModalMode(null);
       setIsLoading(false);
@@ -81,7 +93,6 @@ const UserManagement: React.FC = () => {
     switch (type) {
       case 1: return 'Người Tập';
       case 0: return 'PT';
-      default: return 'PT';
     }
   };
 
@@ -300,7 +311,7 @@ const UserManagement: React.FC = () => {
                               address: user.address,
                               email: user.email,
                               password: '',
-                              type: 1,
+                              type: user.type,
                             });
                             setModalMode('edit');
                             setShowAddModal(true);
@@ -496,7 +507,7 @@ const UserManagement: React.FC = () => {
                           name="password"
                           value={formData.password}
                           onChange={handleInputChange}
-                          required
+                          required={modalMode === 'add'}
                           className=" text-black w-full pl-10 pr-4 py-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-300 transition-all duration-200 bg-gray-50 focus:bg-white"
                           placeholder="Enter password"
                         />
@@ -517,7 +528,7 @@ const UserManagement: React.FC = () => {
                           onChange={(e) =>
                             setFormData((prev) => ({
                               ...prev,
-                              type: Number(e.target.value), 
+                              type: Number(e.target.value),
                             }))
                           }
                           disabled={isReadonly}
