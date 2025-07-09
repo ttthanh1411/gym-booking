@@ -4,7 +4,7 @@ export interface Customer {
   email: string;
   phoneNumber: string;
   address: string;
-  type: number; // 1: Người tập, 2: PT
+  type: number; // 1: Người tập, 0: PT
   status: number; // 1: Active, 0: Inactive
   createdAt?: string;
   updatedAt?: string;

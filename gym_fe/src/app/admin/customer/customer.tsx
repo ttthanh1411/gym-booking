@@ -28,7 +28,8 @@ const UserManagement: React.FC = () => {
     phoneNumber: '',
     address: '',
     email: '',
-    password: ''
+    password: '',
+    type: 1,
   });
   const isReadonly = modalMode === 'view';
   const fetchUsers = async () => {
@@ -51,6 +52,7 @@ const UserManagement: React.FC = () => {
   }, [searchTerm, currentPage, pageSize]);
 
   const handleSubmit = async (e: React.FormEvent) => {
+    debugger
     e.preventDefault();
     setIsLoading(true);
     try {
@@ -64,7 +66,7 @@ const UserManagement: React.FC = () => {
 
       fetchUsers();
       setShowAddModal(false);
-      setFormData({ name: '', phoneNumber: '', address: '', email: '', password: '' });
+      setFormData({ name: '', phoneNumber: '', address: '', email: '', password: '', type: 1 });
       setSelectedUser(null);
       setModalMode(null);
       setIsLoading(false);
@@ -78,7 +80,7 @@ const UserManagement: React.FC = () => {
   const getTypeLabel = (type: number) => {
     switch (type) {
       case 1: return 'Người Tập';
-      case 2: return 'PT';
+      case 0: return 'PT';
       default: return 'PT';
     }
   };
@@ -109,7 +111,8 @@ const UserManagement: React.FC = () => {
       phoneNumber: '',
       address: '',
       email: '',
-      password: ''
+      password: '',
+      type: 1,
     });
   };
 
@@ -297,6 +300,7 @@ const UserManagement: React.FC = () => {
                               address: user.address,
                               email: user.email,
                               password: '',
+                              type: 1,
                             });
                             setModalMode('edit');
                             setShowAddModal(true);
@@ -509,11 +513,20 @@ const UserManagement: React.FC = () => {
                         <select
                           id="type"
                           name="type"
+                          value={formData.type}
+                          onChange={(e) =>
+                            setFormData((prev) => ({
+                              ...prev,
+                              type: Number(e.target.value), 
+                            }))
+                          }
                           disabled={isReadonly}
-                          className="w-full text-black pl-10 pr-4 py-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-300 transition-all duration-200 bg-gray-50 focus:bg-white appearance-none"
+                          className="w-full text-black pl-10 pr-4 py-3 border border-gray-200 rounded-lg
+                                    focus:ring-2 focus:ring-blue-500 focus:border-blue-300 transition-all
+                                    duration-200 bg-gray-50 focus:bg-white appearance-none"
                         >
-                          <option value="1">Người Tập</option>
-                          <option value="2">PT</option>
+                          <option value={1}>Người Tập</option>
+                          <option value={0}>PT</option>
                         </select>
                       </div>
                     </div>

@@ -15,23 +15,36 @@ export default class BaseService<T> {
     this.baseUrl = baseUrl;
   }
 
-  private async handleResponse<R>(response: Response): Promise<R> {
-    const contentType = response.headers.get('content-type');
-
-    if (!contentType?.includes('application/json')) {
-      throw new Error('Unsupported response type');
-    }
-
-    const data = (await response.json()) as R;
-
+// src/services/baseService.ts
+private async handleResponse<R>(response: Response): Promise<R> {
+  if (response.status === 204 || response.status === 205) {
     if (!response.ok) {
-      const errorData = data as unknown as { message?: string };
-      const errorMessage = errorData.message || response.statusText || 'Request failed';
-      throw new Error(`Error ${response.status}: ${errorMessage}`);
+      throw new Error(`Error ${response.status}: ${response.statusText || 'Request failed'}`);
     }
-
-    return data;
+    return undefined as unknown as R;
   }
+
+  const contentType = response.headers.get('content-type') || '';
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  let parsedData: any = null;
+
+  if (contentType.includes('application/json')) {
+    parsedData = await response.json();
+  } else {
+    parsedData = await response.text();   // có thể rỗng
+  }
+
+  if (!response.ok) {
+    const message =
+      (parsedData && typeof parsedData === 'object' && parsedData.message) ||
+      parsedData || // chuỗi text
+      response.statusText ||
+      'Request failed';
+    throw new Error(`Error ${response.status}: ${message}`);
+  }
+
+  return parsedData as R;
+}
 
   // GET ALL
   async getAll(): Promise<T[]> {
@@ -73,7 +86,7 @@ export default class BaseService<T> {
     await this.handleResponse<void>(response);
   }
 
-  // ✅ GET PAGED with query params
+  // GET Paged
   async getPaged(params: Record<string, string | number | undefined>): Promise<PagedResult<T>> {
     const query = new URLSearchParams();
 
