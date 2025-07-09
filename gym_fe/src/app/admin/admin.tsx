@@ -11,10 +11,10 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
   const navigation = [
-    { name: 'Dashboard', icon: Home, href: '#dashboard', current: false },
-    { name: 'User Management', icon: Users, href: '#users', current: false },
-    { name: 'Room Management', icon: Building, href: '#rooms', current: false },
-    { name: 'Settings', icon: Settings, href: '#settings', current: false },
+    { name: 'Báo cáo', icon: Home, href: '#dashboard', current: false },
+    { name: 'Quản lý người dùng', icon: Users, href: '#users', current: false },
+    { name: 'Quản lý lịch trình', icon: Building, href: '#schedule', current: false },
+    { name: 'Cài Đặt', icon: Settings, href: '#settings', current: false },
   ];
 
   return (
