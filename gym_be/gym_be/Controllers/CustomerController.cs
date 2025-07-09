@@ -75,7 +75,6 @@ namespace gym_be.Controllers
                 return NotFound();
             }
 
-            // Cập nhật thông tin
             customer.Name = updatedCustomer.Name;
             customer.PhoneNumber = updatedCustomer.PhoneNumber;
             customer.Address = updatedCustomer.Address;
