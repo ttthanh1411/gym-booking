@@ -25,7 +25,7 @@ namespace gym_be.Repositories.Implementations
 
         public async Task DeleteAsync(Guid id)
         {
-            var customer = await GetByIdAsync(id);
+            var customer = await _context.Customers.FindAsync(id);
             if (customer != null)
             {
                 _context.Customers.Remove(customer);

@@ -82,5 +82,21 @@ namespace gym_be.Services
 
             return result;
         }
+
+        public async Task<Customer?> UpdateAsync(Guid id, Customer updatedCustomer)
+        {
+            var existing = await _repository.GetByIdAsync(id);
+            if (existing == null) return null;
+
+            // Cập nhật trường
+            existing.Name = updatedCustomer.Name;
+            existing.Email = updatedCustomer.Email;
+            existing.PhoneNumber = updatedCustomer.PhoneNumber;
+            existing.Address = updatedCustomer.Address;
+            // Các trường khác nếu có...
+
+            await _repository.SaveChangesAsync();
+            return existing;
+        }
     }
 }

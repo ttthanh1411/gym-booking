@@ -72,5 +72,13 @@ namespace gym_be.Controllers
             return Ok(options);
         }
 
+        [HttpPut("{id}")]
+        public async Task<IActionResult> UpdateCustomer(Guid id, [FromBody] Customer customer)
+        {
+            var updated = await _service.UpdateAsync(id, customer);
+            if (updated == null) return NotFound();
+            return Ok(updated);
+        }
+
     }
 }

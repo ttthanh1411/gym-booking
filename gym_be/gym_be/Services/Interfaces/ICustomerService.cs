@@ -8,6 +8,8 @@ namespace gym_be.Services.Interfaces
         Task<IEnumerable<Customer>> GetAllAsync();
         Task<Customer?> GetByIdAsync(Guid id);
         Task<Customer> CreateAsync(Customer customer);
+
+        Task<Customer?> UpdateAsync(Guid id, Customer updatedCustomer);
         Task<bool> DeleteAsync(Guid id);
         Task<(IEnumerable<Customer> data, int totalCount)> GetPagedAsync(string? keyword, int page, int pageSize);
 
