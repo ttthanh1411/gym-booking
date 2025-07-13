@@ -14,8 +14,6 @@ import {
   Tag,
   CheckCircle, 
   AlertCircle,
-  TrendingUp,
-  Star
 } from 'lucide-react';
 import serviceService from '../../../services/serviceService';
 import { Service, ServiceFormData } from '../../../types/service';
