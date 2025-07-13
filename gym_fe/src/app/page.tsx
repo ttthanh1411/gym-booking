@@ -3,7 +3,8 @@
 import React, { useState } from 'react';
 import AdminLayout from './admin/admin';
 import UserManagement from './admin/customer/customer';
-import ScheduleManagement from './admin/schedule/schdule';
+import ScheduleManagement from './admin/schedule/schedule';
+import ServiceManagement from './admin/service/service';
 // import CustomerPage from '../components/customer/CustomerPage';
 // import CustomerPage from './admin/customer/page';
 
@@ -17,6 +18,8 @@ function App() {
         return <UserManagement />;
       case 'schedule':
         return <ScheduleManagement />;
+      case 'service':
+        return <ServiceManagement />;
     }
   };
 
