@@ -1,8 +1,7 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Menu, X, Home, Users, Building, Settings, LogOut, Bell, Search } from 'lucide-react';
-import { Link, useLocation } from 'react-router-dom'; // Dùng Link từ react-router-dom
 
 interface AdminLayoutProps {
   children: React.ReactNode;
@@ -10,21 +9,14 @@ interface AdminLayoutProps {
 
 const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
-  const [currentRoute, setCurrentRoute] = useState<string>('');
-  const location = useLocation();
-
-  // Cập nhật route hiện tại khi URL thay đổi
-  useEffect(() => {
-    setCurrentRoute(location.pathname);
-  }, [location]);
 
   const navigation = [
-    { name: 'Báo cáo', icon: Home, href: '/dashboard', current: currentRoute === '/dashboard' },
-    { name: 'Quản lý người dùng', icon: Users, href: '/users', current: currentRoute === '/users' },
-    { name: 'Quản lý lịch trình', icon: Building, href: '/schedule', current: currentRoute === '/schedule' },
-    { name: 'Quản lý dịch vụ', icon: Building, href: '/service', current: currentRoute === '/service' },
-    { name: 'Các gói tập', icon: Building, href: '/workout', current: currentRoute === '/workout' },
-    { name: 'Cài Đặt', icon: Settings, href: '/settings', current: currentRoute === '/settings' },
+    { name: 'Báo cáo', icon: Home, href: '#dashboard', current: false },
+    { name: 'Quản lý người dùng', icon: Users, href: '#users', current: false },
+    { name: 'Quản lý lịch trình', icon: Building, href: '#schedule', current: false },
+    { name: 'Quản lý dịch vụ', icon: Building, href: '#service', current: false },
+    { name: 'Các gói tập', icon: Building, href: '#workout', current: false },
+    { name: 'Cài Đặt', icon: Settings, href: '#settings', current: false },
   ];
 
   return (
@@ -48,14 +40,18 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
         
         <nav className="mt-8 px-4">
           {navigation.map((item) => (
-            <Link key={item.name} to={item.href}>
-              <a
-                className={`flex items-center px-4 py-3 text-sm font-medium rounded-lg mb-2 transition-colors duration-200 ${item.current ? 'bg-blue-50 text-blue-700 border-r-4 border-blue-700' : 'text-gray-700 hover:bg-gray-50 hover:text-gray-900'}`}
-              >
-                <item.icon className="h-5 w-5 mr-3" />
-                {item.name}
-              </a>
-            </Link>
+            <a
+              key={item.name}
+              href={item.href}
+              className={`flex items-center px-4 py-3 text-sm font-medium rounded-lg mb-2 transition-colors duration-200 ${
+                item.current
+                  ? 'bg-blue-50 text-blue-700 border-r-4 border-blue-700'
+                  : 'text-gray-700 hover:bg-gray-50 hover:text-gray-900'
+              }`}
+            >
+              <item.icon className="h-5 w-5 mr-3" />
+              {item.name}
+            </a>
           ))}
         </nav>
 
