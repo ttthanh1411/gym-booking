@@ -16,6 +16,8 @@ namespace gym_be.Models
 
         public DbSet<Service> Services { get; set; }
 
+        public DbSet<WorkoutCourse> WorkoutCourses { get; set; }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.HasDefaultSchema("public");
