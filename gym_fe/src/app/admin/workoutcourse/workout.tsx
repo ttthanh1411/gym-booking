@@ -96,7 +96,7 @@ function Workout() {
                 <h1 className="text-4xl font-bold">Workout Courses</h1>
               </div>
               <p className="text-xl opacity-90 max-w-2xl">
-                Discover amazing fitness programs designed by professional trainers to help you achieve your goals.
+                Khám phá các chương trình thể dục tuyệt vời được thiết kế bởi các huấn luyện viên chuyên nghiệp để giúp bạn đạt được mục tiêu của mình.
               </p>
             </div>
             <button 
@@ -173,9 +173,9 @@ function Workout() {
             <div className="bg-gray-100 rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4">
               <BookOpen className="w-8 h-8 text-gray-400" />
             </div>
-            <h3 className="text-xl font-semibold text-gray-900 mb-2">No courses found</h3>
+            <h3 className="text-xl font-semibold text-gray-900 mb-2">Không tìm thấy khóa học nào</h3>
             <p className="text-gray-600">
-              Try adjusting your search criteria or filters to find re looking for.
+              Hãy thử điều chỉnh tiêu chí tìm kiếm hoặc bộ lọc để tìm kiếm lại.
             </p>
           </div>
         )}

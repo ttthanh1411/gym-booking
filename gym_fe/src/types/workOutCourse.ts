@@ -7,3 +7,4 @@ export interface WorkoutCourse {
   description: string;
   trainername?: string;
 }
+

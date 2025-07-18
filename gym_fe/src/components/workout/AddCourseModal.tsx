@@ -202,7 +202,7 @@ export const AddCourseModal: React.FC<AddCourseModalProps> = ({
               name="personaltrainer"
               value={formData.personaltrainer}
               onChange={handleInputChange}
-              className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all appearance-none bg-white ${
+              className={`text-black w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all appearance-none bg-white ${
                 errors.personaltrainer ? 'border-red-500' : 'border-gray-300'
               }`}
             >
@@ -280,7 +280,7 @@ export const AddCourseModal: React.FC<AddCourseModalProps> = ({
               className="flex-1 bg-gradient-to-r from-purple-600 to-blue-600 text-white py-3 px-6 rounded-lg font-medium hover:from-purple-700 hover:to-blue-700 transition-all duration-200 flex items-center justify-center gap-2"
             >
               <Plus className="w-4 h-4" />
-              Add Course
+              Thêm khóa tập
             </button>
           </div>
         </form>

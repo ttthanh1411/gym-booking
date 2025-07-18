@@ -572,7 +572,7 @@ const ServiceManagement: React.FC = () => {
 
         {/* View Service Modal */}
         {showViewModal && selectedService && (
-          <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black bg-opacity-50">
+          <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black bg-opacity-50"  style={{ backgroundColor: 'rgba(0, 0, 0, 0.25)' }}>
             <div className="bg-white rounded-2xl shadow-2xl w-full max-w-2xl max-h-[90vh] overflow-y-auto">
               {/* Header */}
               <div className="flex items-center justify-between p-6 border-b bg-gradient-to-r from-green-50 to-blue-50">
