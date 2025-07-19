@@ -15,7 +15,8 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
     { name: 'Quản lý người dùng', icon: Users, href: '#users', current: false },
     { name: 'Quản lý lịch trình', icon: Building, href: '#schedule', current: false },
     { name: 'Quản lý dịch vụ', icon: Building, href: '#service', current: false },
-    { name: 'Các gói tập', icon: Building, href: '#workout', current: false },
+    { name: 'Quản lý Các gói tập', icon: Building, href: '#workout', current: false },
+    { name: 'Quản lý Các cuộc hẹn', icon: Building, href: '#appointment', current: false },
     { name: 'Cài Đặt', icon: Settings, href: '#settings', current: false },
   ];
 

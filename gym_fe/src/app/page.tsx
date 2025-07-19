@@ -6,6 +6,7 @@ import UserManagement from './admin/customer/customer';
 import ScheduleManagement from './admin/schedule/schedule';
 import ServiceManagement from './admin/service/service';
 import Workout from './admin/workoutcourse/workout';
+import Appointment from './admin/appointment/appointment';
 // import CustomerPage from '../components/customer/CustomerPage';
 // import CustomerPage from './admin/customer/page';
 
@@ -23,6 +24,8 @@ function App() {
         return <ServiceManagement />;
       case 'workout':
         return <Workout />;
+      case 'appointment':
+        return <Appointment />
     }
   };
 

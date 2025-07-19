@@ -36,5 +36,7 @@ namespace gym_be.Models.Entities
 
         [Column("status")]
         public int Status { get; set; }
+
+        public ICollection<Appointment> Appointments { get; set; }
     }
 }

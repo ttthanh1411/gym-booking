@@ -4,7 +4,7 @@ import { CourseModal } from '../../../components/workout/CourseModal';
 import { AddCourseModal } from '../../../components/workout/AddCourseModal';
 import { SearchFilter } from '../../../components/workout/SearchFilter';
 import { StatsCard } from '../../../components/workout/StatsCard';
-import { mockWorkoutCourses, mockTrainers } from '../../../services/mockData';
+import { mockWorkoutCourses, mockTrainers } from '../../../services/workOutCourse';
 import { WorkoutCourse } from '../../../types/workOutCourse';
 import { 
   BookOpen, 

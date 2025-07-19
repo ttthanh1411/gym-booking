@@ -206,7 +206,7 @@ export const AddCourseModal: React.FC<AddCourseModalProps> = ({
                 errors.personaltrainer ? 'border-red-500' : 'border-gray-300'
               }`}
             >
-              <option value="">Select a trainer...</option>
+              <option value="" className='text-black'>Select a trainer...</option>
               {trainers.map(trainer => (
                 <option key={trainer.customerID} value={trainer.customerID}>
                   {trainer.name} - {trainer.email}

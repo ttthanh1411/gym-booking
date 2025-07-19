@@ -8,3 +8,10 @@ export interface WorkoutCourse {
   trainername?: string;
 }
 
+
+export interface PersonalTrainer {
+  id: string,
+  name: string,
+  specialization: string,
+  experience: number
+}
