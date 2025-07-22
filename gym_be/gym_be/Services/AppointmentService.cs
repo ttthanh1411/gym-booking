@@ -1,6 +1,8 @@
 ﻿using gym_be.Models.DTOs;
 using gym_be.Models;
 using gym_be.Services.Interfaces;
+using Microsoft.EntityFrameworkCore;
+using gym_be.Models.Entities;
 
 namespace gym_be.Services
 {
@@ -13,7 +15,7 @@ namespace gym_be.Services
             _context = context;
         }
 
-        public async Task<AppointmentDto> GetAppointmentByIdAsync(string appointmentId)
+        public async Task<AppointmentDto> GetAppointmentByIdAsync(Guid appointmentId)
         {
             var appointment = await _context.Appointments
                 .FirstOrDefaultAsync(a => a.AppointmentId == appointmentId);
@@ -78,7 +80,7 @@ namespace gym_be.Services
         {
             var appointment = new Appointment
             {
-                AppointmentId = appointmentDto.AppointmentId,
+                AppointmentId = Guid.NewGuid(),
                 AppointmentName = appointmentDto.AppointmentName,
                 AppointmentDate = appointmentDto.AppointmentDate,
                 AppointmentTime = appointmentDto.AppointmentTime,
@@ -96,7 +98,7 @@ namespace gym_be.Services
             return appointmentDto;
         }
 
-        public async Task<AppointmentDto> UpdateAppointmentAsync(string appointmentId, AppointmentDto appointmentDto)
+        public async Task<AppointmentDto> UpdateAppointmentAsync(Guid appointmentId, AppointmentDto appointmentDto)
         {
             var appointment = await _context.Appointments
                 .FirstOrDefaultAsync(a => a.AppointmentId == appointmentId);
@@ -118,7 +120,7 @@ namespace gym_be.Services
             return appointmentDto;
         }
 
-        public async Task<bool> DeleteAppointmentAsync(string appointmentId)
+        public async Task<bool> DeleteAppointmentAsync(Guid appointmentId)
         {
             var appointment = await _context.Appointments
                 .FirstOrDefaultAsync(a => a.AppointmentId == appointmentId);

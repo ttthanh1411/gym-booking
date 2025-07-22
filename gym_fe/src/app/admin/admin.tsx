@@ -1,25 +1,10 @@
-'use client';
-
+// admin.tsx
 import React, { useState } from 'react';
 import { Menu, X, Home, Users, Building, Settings, LogOut, Bell, Search } from 'lucide-react';
+import { Link, Outlet } from 'react-router-dom';
 
-interface AdminLayoutProps {
-  children: React.ReactNode;
-}
-
-const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
+const AdminLayout = () => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
-
-  const navigation = [
-    { name: 'Báo cáo', icon: Home, href: '#dashboard', current: false },
-    { name: 'Quản lý người dùng', icon: Users, href: '#users', current: false },
-    { name: 'Quản lý lịch trình', icon: Building, href: '#schedule', current: false },
-    { name: 'Quản lý dịch vụ', icon: Building, href: '#service', current: false },
-    { name: 'Quản lý Các gói tập', icon: Building, href: '#workout', current: false },
-    { name: 'Quản lý Các cuộc hẹn', icon: Building, href: '#appointment', current: false },
-    { name: 'Cài Đặt', icon: Settings, href: '#settings', current: false },
-  ];
-
   return (
     <div className="min-h-screen bg-gray-50">
       {sidebarOpen && (
@@ -40,20 +25,55 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
         </div>
         
         <nav className="mt-8 px-4">
-          {navigation.map((item) => (
-            <a
-              key={item.name}
-              href={item.href}
-              className={`flex items-center px-4 py-3 text-sm font-medium rounded-lg mb-2 transition-colors duration-200 ${
-                item.current
-                  ? 'bg-blue-50 text-blue-700 border-r-4 border-blue-700'
-                  : 'text-gray-700 hover:bg-gray-50 hover:text-gray-900'
-              }`}
-            >
-              <item.icon className="h-5 w-5 mr-3" />
-              {item.name}
-            </a>
-          ))}
+          <Link
+            to="/dashboard"
+            className="flex items-center px-4 py-3 text-sm font-medium rounded-lg mb-2 transition-colors duration-200 text-gray-700 hover:bg-gray-50 hover:text-gray-900"
+          >
+            <Home className="h-5 w-5 mr-3" />
+            Báo cáo
+          </Link>
+          <Link
+            to="/users"
+            className="flex items-center px-4 py-3 text-sm font-medium rounded-lg mb-2 transition-colors duration-200 text-gray-700 hover:bg-gray-50 hover:text-gray-900"
+          >
+            <Users className="h-5 w-5 mr-3" />
+            Quản lý người dùng
+          </Link>
+          <Link
+            to="/schedule"
+            className="flex items-center px-4 py-3 text-sm font-medium rounded-lg mb-2 transition-colors duration-200 text-gray-700 hover:bg-gray-50 hover:text-gray-900"
+          >
+            <Building className="h-5 w-5 mr-3" />
+            Quản lý lịch trình
+          </Link>
+          <Link
+            to="/service"
+            className="flex items-center px-4 py-3 text-sm font-medium rounded-lg mb-2 transition-colors duration-200 text-gray-700 hover:bg-gray-50 hover:text-gray-900"
+          >
+            <Building className="h-5 w-5 mr-3" />
+            Quản lý dịch vụ
+          </Link>
+          <Link
+            to="/workout"
+            className="flex items-center px-4 py-3 text-sm font-medium rounded-lg mb-2 transition-colors duration-200 text-gray-700 hover:bg-gray-50 hover:text-gray-900"
+          >
+            <Building className="h-5 w-5 mr-3" />
+            Quản lý Các gói tập
+          </Link>
+          <Link
+            to="/appointment"
+            className="flex items-center px-4 py-3 text-sm font-medium rounded-lg mb-2 transition-colors duration-200 text-gray-700 hover:bg-gray-50 hover:text-gray-900"
+          >
+            <Building className="h-5 w-5 mr-3" />
+            Quản lý Các cuộc hẹn
+          </Link>
+          <Link
+            to="/admin/settings"
+            className="flex items-center px-4 py-3 text-sm font-medium rounded-lg mb-2 transition-colors duration-200 text-gray-700 hover:bg-gray-50 hover:text-gray-900"
+          >
+            <Settings className="h-5 w-5 mr-3" />
+            Cài Đặt
+          </Link>
         </nav>
 
         <div className="absolute bottom-0 w-full p-4">
@@ -104,7 +124,7 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
           </div>
         </header>
         <main className="p-6">
-          {children}
+          <Outlet />
         </main>
       </div>
     </div>

@@ -16,7 +16,7 @@ namespace gym_be.Controllers
         }
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<AppointmentDto>> GetAppointmentById(string id)
+        public async Task<ActionResult<AppointmentDto>> GetAppointmentById(Guid id)
         {
             var appointment = await _appointmentService.GetAppointmentByIdAsync(id);
             if (appointment == null)
@@ -47,7 +47,7 @@ namespace gym_be.Controllers
         }
 
         [HttpPut("{id}")]
-        public async Task<ActionResult<AppointmentDto>> UpdateAppointment(string id, AppointmentDto appointmentDto)
+        public async Task<ActionResult<AppointmentDto>> UpdateAppointment(Guid id, AppointmentDto appointmentDto)
         {
             var updatedAppointment = await _appointmentService.UpdateAppointmentAsync(id, appointmentDto);
             if (updatedAppointment == null)
@@ -57,7 +57,7 @@ namespace gym_be.Controllers
         }
 
         [HttpDelete("{id}")]
-        public async Task<ActionResult> DeleteAppointment(string id)
+        public async Task<ActionResult> DeleteAppointment(Guid id)
         {
             var success = await _appointmentService.DeleteAppointmentAsync(id);
             if (!success)

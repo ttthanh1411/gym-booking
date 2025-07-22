@@ -7,6 +7,8 @@ import ScheduleManagement from './admin/schedule/schedule';
 import ServiceManagement from './admin/service/service';
 import Workout from './admin/workoutcourse/workout';
 import Appointment from './admin/appointment/appointment';
+import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom';
+import LoginLayout from './auth/login';
 // import CustomerPage from '../components/customer/CustomerPage';
 // import CustomerPage from './admin/customer/page';
 
@@ -14,20 +16,20 @@ import Appointment from './admin/appointment/appointment';
 function App() {
   const [currentView, setCurrentView] = useState('dashboard');
 
-  const renderContent = () => {
-    switch (currentView) {
-      case 'users':
-        return <UserManagement />;
-      case 'schedule':
-        return <ScheduleManagement />;
-      case 'service':
-        return <ServiceManagement />;
-      case 'workout':
-        return <Workout />;
-      case 'appointment':
-        return <Appointment />
-    }
-  };
+  // const renderContent = () => {
+  //   switch (currentView) {
+  //     case 'users':
+  //       return <UserManagement />;
+  //     case 'schedule':
+  //       return <ScheduleManagement />;
+  //     case 'service':
+  //       return <ServiceManagement />;
+  //     case 'workout':
+  //       return <Workout />;
+  //     case 'appointment':
+  //       return <Appointment />
+  //   }
+  // };
 
   React.useEffect(() => {
     const handleHashChange = () => {
@@ -38,16 +40,32 @@ function App() {
     };
 
     window.addEventListener('hashchange', handleHashChange);
-    handleHashChange(); 
+    handleHashChange();
     return () => {
       window.removeEventListener('hashchange', handleHashChange);
     };
   }, []);
 
   return (
-    <AdminLayout>
-      {renderContent()}
-    </AdminLayout>
+    <Router>
+      <Routes>
+        {/* Redirect "/" về "/login" */}
+        <Route path="/" element={<Navigate to="/login" />} />
+
+        {/* Login page */}
+        <Route path="/login" element={<LoginLayout />} />
+
+        {/* Admin layout with nested pages */}
+        <Route path="/admin" element={<AdminLayout />}>
+          <Route index element={<div>Welcome to Admin Dashboard</div>} />
+          <Route path="users" element={<UserManagement />} />
+          <Route path="schedule" element={<ScheduleManagement />} />
+          <Route path="service" element={<ServiceManagement />} />
+          <Route path="workout" element={<Workout />} />
+          <Route path="appointment" element={<Appointment />} />
+        </Route>
+      </Routes>
+    </Router>
   );
 }
 
