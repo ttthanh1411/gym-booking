@@ -120,7 +120,7 @@ export default function UserLayout({
             </div>
 
             {/* Main content */}
-            <div className="lg:pl-32">
+            <div className="lg:pl-8 container">
                 <div>
                     {/* Top bar */}
                     <div className="sticky top-0 z-30 flex h-16 items-center justify-between bg-white border-b border-gray-200 px-4 sm:px-6 lg:px-8">

@@ -91,7 +91,7 @@ const recentAchievements = [
 
 export default function UserDashboard() {
   return (
-    <div className="space-y-8">
+    <div className="space-y-8 container">
       {/* Welcome section */}
       <div className="bg-gradient-to-r from-emerald-600 via-emerald-500 to-blue-500 rounded-2xl p-8 text-white">
         <div className="max-w-3xl">

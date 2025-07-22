@@ -146,7 +146,7 @@ export default function SchedulePage() {
   const calendarDays = generateCalendarDays();
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 max-w-full">
       {/* Header */}
       <div className="bg-gradient-to-r from-blue-600 to-purple-600 rounded-2xl p-8 text-white">
         <h1 className="text-3xl font-bold mb-2">Lịch tập của tôi</h1>
