@@ -1,4 +1,4 @@
-import { WorkoutCourse, PersonalTrainer } from '../types/workOutCourse';
+import { WorkoutCourse, PersonalTrainer } from '../type/workOutCourse';
 
 export const mockTrainers: PersonalTrainer[] = [
   {
