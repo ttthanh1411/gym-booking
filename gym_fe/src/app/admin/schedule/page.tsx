@@ -1,7 +1,8 @@
+'use client';
 import React, { useEffect, useState } from 'react';
 import { Calendar, Plus, Search, Filter, MoreVertical, Edit2, Trash2, Eye, X, Clock, Users, CalendarDays, CheckCircle, AlertCircle } from 'lucide-react';
-import scheduleService from '../../../services/scheduleService';
-import { Schedule, ScheduleFormData } from '../../../types/schedule';
+import scheduleService from '../../../service/scheduleService';
+import { Schedule, ScheduleFormData } from '../../../type/schedule';
 
 interface ToastNotification {
     id: string;

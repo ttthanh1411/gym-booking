@@ -1,7 +1,8 @@
+'use client';
 import React, { useEffect, useState } from 'react';
 import { Users, Plus, Search, Filter, MoreVertical, Edit2, Trash2, Eye, X, User, Phone, MapPin, Mail, Lock, CheckCircle, AlertCircle } from 'lucide-react';
-import customerService from '@/services/customerService';
-import { Customer } from '../../../types/customer';
+import customerService from '../../../service/customerService';
+import { Customer } from '../../../type/customer';
 
 interface ToastNotification {
   id: string;

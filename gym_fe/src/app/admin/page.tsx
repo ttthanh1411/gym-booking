@@ -1,9 +1,14 @@
-// admin.tsx
+'use client';
 import React, { useState } from 'react';
 import { Menu, X, Home, Users, Building, Settings, LogOut, Bell, Search } from 'lucide-react';
-import { Link, Outlet } from 'react-router-dom';
+import Link from 'next/link';
 
-const AdminLayout = () => {
+
+interface AdminLayoutProps {
+  children: React.ReactNode;
+}
+
+const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   return (
     <div className="min-h-screen bg-gray-50">
@@ -26,49 +31,49 @@ const AdminLayout = () => {
         
         <nav className="mt-8 px-4">
           <Link
-            to="/dashboard"
+            href="/admin/dashboard"
             className="flex items-center px-4 py-3 text-sm font-medium rounded-lg mb-2 transition-colors duration-200 text-gray-700 hover:bg-gray-50 hover:text-gray-900"
           >
             <Home className="h-5 w-5 mr-3" />
             Báo cáo
           </Link>
           <Link
-            to="/users"
+            href="/admin/user"
             className="flex items-center px-4 py-3 text-sm font-medium rounded-lg mb-2 transition-colors duration-200 text-gray-700 hover:bg-gray-50 hover:text-gray-900"
           >
             <Users className="h-5 w-5 mr-3" />
             Quản lý người dùng
           </Link>
           <Link
-            to="/schedule"
+            href="/admin/schedule"
             className="flex items-center px-4 py-3 text-sm font-medium rounded-lg mb-2 transition-colors duration-200 text-gray-700 hover:bg-gray-50 hover:text-gray-900"
           >
             <Building className="h-5 w-5 mr-3" />
             Quản lý lịch trình
           </Link>
           <Link
-            to="/service"
+            href="/admin/service"
             className="flex items-center px-4 py-3 text-sm font-medium rounded-lg mb-2 transition-colors duration-200 text-gray-700 hover:bg-gray-50 hover:text-gray-900"
           >
             <Building className="h-5 w-5 mr-3" />
             Quản lý dịch vụ
           </Link>
           <Link
-            to="/workout"
+            href="/admin/workout"
             className="flex items-center px-4 py-3 text-sm font-medium rounded-lg mb-2 transition-colors duration-200 text-gray-700 hover:bg-gray-50 hover:text-gray-900"
           >
             <Building className="h-5 w-5 mr-3" />
             Quản lý Các gói tập
           </Link>
           <Link
-            to="/appointment"
+            href="/admin/appointment"
             className="flex items-center px-4 py-3 text-sm font-medium rounded-lg mb-2 transition-colors duration-200 text-gray-700 hover:bg-gray-50 hover:text-gray-900"
           >
             <Building className="h-5 w-5 mr-3" />
             Quản lý Các cuộc hẹn
           </Link>
           <Link
-            to="/admin/settings"
+            href="/admin/settings"
             className="flex items-center px-4 py-3 text-sm font-medium rounded-lg mb-2 transition-colors duration-200 text-gray-700 hover:bg-gray-50 hover:text-gray-900"
           >
             <Settings className="h-5 w-5 mr-3" />
@@ -124,7 +129,7 @@ const AdminLayout = () => {
           </div>
         </header>
         <main className="p-6">
-          <Outlet />
+          {children}
         </main>
       </div>
     </div>

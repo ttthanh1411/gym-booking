@@ -1,10 +1,14 @@
 'use client';
 import React from 'react';
 import { useState } from 'react';
-import LoginForm from './login/LoginForm';
-import RegisterForm from './resigeter/RegisterForm';
+import LoginForm from './login/page';
+import RegisterForm from './register/page';
 
-function LoginLayout() {
+interface LoginLayoutProps {
+  children: React.ReactNode;
+}
+
+const LoginLayout: React.FC<LoginLayoutProps> = ({ children }) => {
   const [isLoginMode, setIsLoginMode] = useState(true);
 
   return (
