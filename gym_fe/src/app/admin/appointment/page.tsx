@@ -1,3 +1,4 @@
+'use client';
 import React, { useState, useEffect } from 'react';
 import { Calendar, Plus, Search, Filter, Clock, Users, DollarSign, CheckCircle } from 'lucide-react';
 import Dashboard from '../../../component/appointment/Dashboard';

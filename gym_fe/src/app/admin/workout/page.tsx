@@ -1,3 +1,4 @@
+'use client';
 import React, { useState, useMemo } from 'react';
 import  CourseCard  from '../../../component/workout/CourseCard';
 import { CourseModal } from '../../../component/workout/CourseModal';

@@ -1,6 +1,6 @@
 'use client';
 import React, { useState } from 'react';
-import { Menu, X, Home, Users, Building, Settings, LogOut, Bell, Search } from 'lucide-react';
+import { Menu, X, Home, Users, Building, Settings, LogOut, Bell, Search, Wallpaper, CardSim, Package, Projector } from 'lucide-react';
 import Link from 'next/link';
 
 
@@ -48,28 +48,28 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
             href="/admin/schedule"
             className="flex items-center px-4 py-3 text-sm font-medium rounded-lg mb-2 transition-colors duration-200 text-gray-700 hover:bg-gray-50 hover:text-gray-900"
           >
-            <Building className="h-5 w-5 mr-3" />
+            <Wallpaper className="h-5 w-5 mr-3" />
             Quản lý lịch trình
           </Link>
           <Link
             href="/admin/service"
             className="flex items-center px-4 py-3 text-sm font-medium rounded-lg mb-2 transition-colors duration-200 text-gray-700 hover:bg-gray-50 hover:text-gray-900"
           >
-            <Building className="h-5 w-5 mr-3" />
+            <CardSim className="h-5 w-5 mr-3" />
             Quản lý dịch vụ
           </Link>
           <Link
             href="/admin/workout"
             className="flex items-center px-4 py-3 text-sm font-medium rounded-lg mb-2 transition-colors duration-200 text-gray-700 hover:bg-gray-50 hover:text-gray-900"
           >
-            <Building className="h-5 w-5 mr-3" />
+            <Package className="h-5 w-5 mr-3" />
             Quản lý Các gói tập
           </Link>
           <Link
             href="/admin/appointment"
             className="flex items-center px-4 py-3 text-sm font-medium rounded-lg mb-2 transition-colors duration-200 text-gray-700 hover:bg-gray-50 hover:text-gray-900"
           >
-            <Building className="h-5 w-5 mr-3" />
+            <Projector className="h-5 w-5 mr-3" />
             Quản lý Các cuộc hẹn
           </Link>
           <Link
