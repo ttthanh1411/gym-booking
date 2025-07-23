@@ -69,7 +69,7 @@ const UserManagement: React.FC = () => {
         if (!updatedData.password?.trim()) {
           delete updatedData.password;
         }
-        await customerService.update(selectedUser.customerID, formData);
+        await customerService.update(selectedUser.customerid, formData);
         showNotification('success', 'Cập nhật người dùng thành công!');
       } else {
         await customerService.create(formData);
@@ -272,7 +272,7 @@ const UserManagement: React.FC = () => {
                   </tr>
                 ) : (
                   users.map((user) => (
-                    <tr key={user.customerID} className="hover:bg-gray-50 transition-colors">
+                    <tr key={user.customerid} className="hover:bg-gray-50 transition-colors">
                       <td className="px-6 py-4 whitespace-nowrap">
                         <div className="flex items-center">
                           <div className="h-10 w-10 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full flex items-center justify-center">
@@ -280,7 +280,7 @@ const UserManagement: React.FC = () => {
                           </div>
                           <div className="ml-4">
                             <div className="text-sm font-medium text-gray-900">{user.name}</div>
-                            <div className="text-sm text-gray-500">ID: {user.customerID}</div>
+                            <div className="text-sm text-gray-500">ID: {user.customerid}</div>
                           </div>
                         </div>
                       </td>
@@ -290,7 +290,7 @@ const UserManagement: React.FC = () => {
                         </span>
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-center text-sm text-gray-900">
-                        {user.phoneNumber}
+                        {user.phonenumber}
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-center text-sm text-gray-500">
                         {user.email}
@@ -307,7 +307,7 @@ const UserManagement: React.FC = () => {
                             setSelectedUser(user);
                             setFormData({
                               name: user.name,
-                              phoneNumber: user.phoneNumber,
+                              phoneNumber: user.phonenumber,
                               address: user.address,
                               email: user.email,
                               password: '',
@@ -320,7 +320,7 @@ const UserManagement: React.FC = () => {
                             <Edit2 className="h-4 w-4" />
                           </button>
                           <button
-                            onClick={() => handleDelete(user.customerID)}
+                            onClick={() => handleDelete(user.customerid)}
                             className="text-red-600 hover:text-red-900 transition-colors p-1 hover:bg-red-50 rounded"
                           >
                             <Trash2 className="h-4 w-4" />
@@ -597,7 +597,7 @@ const UserManagement: React.FC = () => {
                   </div>
                   <div>
                     <label className="text-sm font-semibold text-gray-700">Số điện thoại</label>
-                    <p className="mt-1 text-gray-900">{selectedUser.phoneNumber}</p>
+                    <p className="mt-1 text-gray-900">{selectedUser.phonenumber}</p>
                   </div>
                   <div>
                     <label className="text-sm font-semibold text-gray-700">Email</label>

@@ -53,38 +53,38 @@ private async handleResponse<R>(response: Response): Promise<R> {
   }
 
   // GET ONE
-  async getOne(id: string | number): Promise<T> {
-    const response = await fetch(`${this.baseUrl}/${id}`);
-    return this.handleResponse<T>(response);
-  }
+async getOne(id: string | number): Promise<T> {
+  const response = await fetch(`${this.baseUrl}/get?id=${id}`);
+  return this.handleResponse<T>(response);
+}
 
-  // CREATE
-  async create(data: Partial<T>): Promise<T> {
-    const response = await fetch(this.baseUrl, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(data),
-    });
-    return this.handleResponse<T>(response);
-  }
+// CREATE
+async create(data: Partial<T>): Promise<T> {
+  const response = await fetch(`${this.baseUrl}/add`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(data),
+  });
+  return this.handleResponse<T>(response);
+}
 
-  // UPDATE
-  async update(id: string | number, data: Partial<T>): Promise<T> {
-    const response = await fetch(`${this.baseUrl}/${id}`, {
-      method: 'PUT',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(data),
-    });
-    return this.handleResponse<T>(response);
-  }
+// UPDATE
+async update(id: string | number, data: Partial<T>): Promise<T> {
+  const response = await fetch(`${this.baseUrl}/edit?id=${id}`, {
+    method: 'PUT',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(data),
+  });
+  return this.handleResponse<T>(response);
+}
 
-  // DELETE
-  async delete(id: string | number): Promise<void> {
-    const response = await fetch(`${this.baseUrl}/${id}`, {
-      method: 'DELETE',
-    });
-    await this.handleResponse<void>(response);
-  }
+// DELETE
+async delete(id: string | number): Promise<void> {
+  const response = await fetch(`${this.baseUrl}/delete?id=${id}`, {
+    method: 'DELETE',
+  });
+  await this.handleResponse<void>(response);
+}
 
   // GET Paged
   async getPaged(params: Record<string, string | number | undefined>): Promise<PagedResult<T>> {
