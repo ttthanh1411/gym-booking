@@ -1,7 +1,4 @@
-﻿using BackEnd.Domain.Models;
-using CleanArchitecture.Application.Common.Interfaces;
-
-namespace CleanArchitecture.Application.Customer.Queries.GetPaging;
+﻿namespace CleanArchitecture.Application.Customer.Queries.GetPaging;
 
 public record GetPagingQuery : PagingModel, IRequest<PagingDto<GetPagingDtoQuery>>
 {

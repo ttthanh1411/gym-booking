@@ -1,7 +1,4 @@
-﻿using BackEnd.Domain.Models;
-using CleanArchitecture.Application.Common.Interfaces;
-
-namespace CleanArchitecture.Application.Customer.Queries.GetOptions;
+﻿namespace CleanArchitecture.Application.Customer.Queries.GetOptions;
 
 public record GetOptionsQuery : OptionModel, IRequest<PagingDto<OptionDto<object>>>
 {

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using Microsoft.EntityFrameworkCore;
+
 
 namespace BackEnd.Domain.Entities;
 
@@ -23,5 +23,5 @@ public partial class qr_booking
 
     [ForeignKey("customerid")]
     [InverseProperty("qr_bookings")]
-    public virtual customer? customer { get; set; }
+    public virtual Customer? customer { get; set; }
 }

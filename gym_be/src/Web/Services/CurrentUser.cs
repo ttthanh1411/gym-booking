@@ -1,7 +1,5 @@
 ﻿using System.Security.Claims;
-
-using CleanArchitecture.Application.Common.Interfaces;
-
+using BackEnd.Domain.Interfaces;
 namespace CleanArchitecture.Web.Services;
 
 public class CurrentUser : IUser
@@ -14,4 +12,16 @@ public class CurrentUser : IUser
     }
 
     public string? Id => _httpContextAccessor.HttpContext?.User?.FindFirstValue(ClaimTypes.NameIdentifier);
+
+    public string? Username => throw new NotImplementedException();
+
+    public Task<long?> GetUnitId()
+    {
+        throw new NotImplementedException();
+    }
+
+    public Task<string?> GetUnitUuid()
+    {
+        throw new NotImplementedException();
+    }
 }

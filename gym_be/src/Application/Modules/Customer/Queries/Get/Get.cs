@@ -1,6 +1,4 @@
-﻿using CleanArchitecture.Application.Common.Interfaces;
-
-namespace CleanArchitecture.Application.Customer.Queries.Get;
+﻿namespace CleanArchitecture.Application.Customer.Queries.Get;
 
 public record GetQuery : IRequest<ResultDto<GetDtoQuery>>
 {

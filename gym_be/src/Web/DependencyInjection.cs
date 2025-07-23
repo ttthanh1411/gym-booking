@@ -1,6 +1,6 @@
 ﻿using Azure.Identity;
+using BackEnd.Domain.Interfaces;
 using BackEnd.Infrastructure.Data;
-using CleanArchitecture.Application.Common.Interfaces;
 using CleanArchitecture.Infrastructure.Data;
 using CleanArchitecture.Web.Services;
 using Microsoft.AspNetCore.Mvc;
@@ -72,16 +72,16 @@ public static class DependencyInjection
         return services;
     }
 
-    public static IServiceCollection AddKeyVaultIfConfigured(this IServiceCollection services, ConfigurationManager configuration)
-    {
-        var keyVaultUri = configuration["KeyVaultUri"];
-        if (!string.IsNullOrWhiteSpace(keyVaultUri))
-        {
-            configuration.AddAzureKeyVault(
-                new Uri(keyVaultUri),
-                new DefaultAzureCredential());
-        }
+    //public static IServiceCollection AddKeyVaultIfConfigured(this IServiceCollection services, ConfigurationManager configuration)
+    //{
+    //    var keyVaultUri = configuration["KeyVaultUri"];
+    //    if (!string.IsNullOrWhiteSpace(keyVaultUri))
+    //    {
+    //        configuration.AddAzureKeyVault(
+    //            new Uri(keyVaultUri),
+    //            new DefaultAzureCredential());
+    //    }
 
-        return services;
-    }
+    //    return services;
+    //}
 }

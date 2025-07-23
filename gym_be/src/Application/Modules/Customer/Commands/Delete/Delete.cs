@@ -1,6 +1,4 @@
-﻿using CleanArchitecture.Application.Common.Interfaces;
-
-namespace CleanArchitecture.Application.Customer.Commands.Delete;
+﻿namespace CleanArchitecture.Application.Customer.Commands.Delete;
 
 public record DeleteCommand : IRequest<ResultDto>
 {

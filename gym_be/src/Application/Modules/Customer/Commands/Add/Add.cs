@@ -3,6 +3,18 @@
 public record AddCommand : IRequest<ResultDto>, IMapTo<Entities.Customer>
 {
     public string Name { get; set; } = null!;
+
+    public string Phonenumber { get; set; } = null!;
+
+    public string? Address { get; set; }
+
+    public string Email { get; set; } = null!;
+
+    public string Password { get; set; } = null!;
+
+    public int? Status { get; set; }
+
+    public int? Type { get; set; }
 }
 
 public class AddCommandValidator : AbstractValidator<AddCommand>
@@ -20,6 +32,7 @@ public class AddCommandHandler(ApplicationDbContext context, IMapper map) : IReq
     {
         var modal = map.Map<Entities.Customer>(request);
 
+        modal.Customerid = Guid.NewGuid();
 
         await context.Customers.AddAsync(modal);
 

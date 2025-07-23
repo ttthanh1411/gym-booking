@@ -1,14 +1,15 @@
-﻿using CleanArchitecture.Application.Common.Models;
+﻿using BackEnd.Domain.Models;
 using Microsoft.AspNetCore.Identity;
 
 namespace CleanArchitecture.Infrastructure.Identity;
 
 public static class IdentityResultExtensions
 {
-    public static Result ToApplicationResult(this IdentityResult result)
+    public static ResultDto ToApplicationResult(this IdentityResult result)
     {
-        return result.Succeeded
-            ? Result.Success()
-            : Result.Failure(result.Errors.Select(e => e.Description));
+        return new ResultDto();
+        //result.Succeeded;
+        //? Result.Success()
+        //: Result.Failure(result.Errors.Select(e => e.Description));
     }
 }

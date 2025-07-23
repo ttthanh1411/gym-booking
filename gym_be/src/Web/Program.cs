@@ -1,69 +1,46 @@
 ﻿using CleanArchitecture.Infrastructure.Data;
 
 var builder = WebApplication.CreateBuilder(args);
-builder.Services.AddSwaggerGen(); 
-// Add services to the container.
-builder.Services.AddKeyVaultIfConfigured(builder.Configuration);
 
+// Add services
+//builder.Services.AddKeyVaultIfConfigured(builder.Configuration);
 builder.Services.AddApplicationServices();
 builder.Services.AddInfrastructureServices(builder.Configuration);
 builder.Services.AddWebServices();
 
-// ✅ Swagger
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
-
+// ✅ NSwag - Add OpenAPI document
 builder.Services.AddOpenApiDocument(config =>
 {
     config.Title = "Gym API";
+    config.Version = "v1"; // bạn có thể thêm version nếu muốn rõ ràng
 });
 
 var app = builder.Build();
 
-
-app.UseSwagger();
-app.UseSwaggerUI();                                              
-// Configure the HTTP request pipeline.
+// Middleware
 if (app.Environment.IsDevelopment())
 {
-    await app.InitialiseDatabaseAsync();
-    app.UseSwagger();
-    app.UseSwaggerUI();
+    // Optional: khởi tạo CSDL
 }
 else
 {
-    // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
     app.UseHsts();
 }
 
-app.UseHealthChecks("/health");
 app.UseHttpsRedirection();
 app.UseStaticFiles();
+app.UseHealthChecks("/health");
 
-app.UseSwaggerUI(c =>
-{
-    c.SwaggerEndpoint("/swagger/v1/swagger.json", "Gym API v1");
-    c.RoutePrefix = "swagger"; // Truy cập tại /swagger
-});
+app.UseExceptionHandler(options => { });
 
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller}/{action=Index}/{id?}");
 
 app.MapRazorPages();
-
-app.UseExceptionHandler(options => { });
-
-#if (UseApiOnly)
-app.Map("/", () => Results.Redirect("/api"));
-#endif
-
 app.MapEndpoints();
 
-// NSwag middleware
-app.UseOpenApi();
-app.UseSwaggerUi();
+app.UseOpenApi();      
+app.UseSwaggerUi();    
 
 app.Run();
-
-public partial class Program { }
