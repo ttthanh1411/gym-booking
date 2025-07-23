@@ -305,6 +305,296 @@ export class CustomerClient implements ICustomerClient {
     }
 }
 
+export interface IServiceClient {
+    getService(serviceid: string): Observable<ResultDtoOfGetDtoQuery2>;
+    getPagingService(q: string | null | undefined, page: number | null | undefined, size: number | null | undefined, count: number | null | undefined, countable: boolean | null | undefined, hasNextPage: boolean | null | undefined): Observable<PagingDtoOfGetPagingDtoQuery2>;
+    addService(request: AddCommand2): Observable<ResultDto>;
+    editService(request: EditCommand2): Observable<ResultDto>;
+    deleteService(serviceid: string): Observable<ResultDto>;
+}
+
+@Injectable({
+    providedIn: 'root'
+})
+export class ServiceClient implements IServiceClient {
+    private http: HttpClient;
+    private baseUrl: string;
+    protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
+
+    constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
+        this.http = http;
+        this.baseUrl = baseUrl ?? "";
+    }
+
+    getService(serviceid: string): Observable<ResultDtoOfGetDtoQuery2> {
+        let url_ = this.baseUrl + "/service/get?";
+        if (serviceid === undefined || serviceid === null)
+            throw new Error("The parameter 'serviceid' must be defined and cannot be null.");
+        else
+            url_ += "Serviceid=" + encodeURIComponent("" + serviceid) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetService(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetService(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<ResultDtoOfGetDtoQuery2>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<ResultDtoOfGetDtoQuery2>;
+        }));
+    }
+
+    protected processGetService(response: HttpResponseBase): Observable<ResultDtoOfGetDtoQuery2> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = ResultDtoOfGetDtoQuery2.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+
+    getPagingService(q: string | null | undefined, page: number | null | undefined, size: number | null | undefined, count: number | null | undefined, countable: boolean | null | undefined, hasNextPage: boolean | null | undefined): Observable<PagingDtoOfGetPagingDtoQuery2> {
+        let url_ = this.baseUrl + "/service/get-paging?";
+        if (q !== undefined && q !== null)
+            url_ += "Q=" + encodeURIComponent("" + q) + "&";
+        if (page !== undefined && page !== null)
+            url_ += "Page=" + encodeURIComponent("" + page) + "&";
+        if (size !== undefined && size !== null)
+            url_ += "Size=" + encodeURIComponent("" + size) + "&";
+        if (count !== undefined && count !== null)
+            url_ += "Count=" + encodeURIComponent("" + count) + "&";
+        if (countable !== undefined && countable !== null)
+            url_ += "Countable=" + encodeURIComponent("" + countable) + "&";
+        if (hasNextPage !== undefined && hasNextPage !== null)
+            url_ += "HasNextPage=" + encodeURIComponent("" + hasNextPage) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetPagingService(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetPagingService(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<PagingDtoOfGetPagingDtoQuery2>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<PagingDtoOfGetPagingDtoQuery2>;
+        }));
+    }
+
+    protected processGetPagingService(response: HttpResponseBase): Observable<PagingDtoOfGetPagingDtoQuery2> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = PagingDtoOfGetPagingDtoQuery2.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+
+    addService(request: AddCommand2): Observable<ResultDto> {
+        let url_ = this.baseUrl + "/service/add";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(request);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json",
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processAddService(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processAddService(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<ResultDto>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<ResultDto>;
+        }));
+    }
+
+    protected processAddService(response: HttpResponseBase): Observable<ResultDto> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = ResultDto.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+
+    editService(request: EditCommand2): Observable<ResultDto> {
+        let url_ = this.baseUrl + "/service/edit";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(request);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json",
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("put", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processEditService(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processEditService(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<ResultDto>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<ResultDto>;
+        }));
+    }
+
+    protected processEditService(response: HttpResponseBase): Observable<ResultDto> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = ResultDto.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+
+    deleteService(serviceid: string): Observable<ResultDto> {
+        let url_ = this.baseUrl + "/service/delete?";
+        if (serviceid === undefined || serviceid === null)
+            throw new Error("The parameter 'serviceid' must be defined and cannot be null.");
+        else
+            url_ += "Serviceid=" + encodeURIComponent("" + serviceid) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("delete", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processDeleteService(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processDeleteService(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<ResultDto>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<ResultDto>;
+        }));
+    }
+
+    protected processDeleteService(response: HttpResponseBase): Observable<ResultDto> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = ResultDto.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+}
+
 export class ResultDtoOfGetDtoQuery implements IResultDtoOfGetDtoQuery {
     data?: GetDtoQuery | undefined;
 
@@ -715,6 +1005,266 @@ export interface IEditCommand {
     email?: string;
     password?: string;
     type?: number | undefined;
+}
+
+export class ResultDtoOfGetDtoQuery2 implements IResultDtoOfGetDtoQuery2 {
+    data?: GetDtoQuery2 | undefined;
+
+    constructor(data?: IResultDtoOfGetDtoQuery2) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.data = _data["data"] ? GetDtoQuery2.fromJS(_data["data"]) : <any>undefined;
+        }
+    }
+
+    static fromJS(data: any): ResultDtoOfGetDtoQuery2 {
+        data = typeof data === 'object' ? data : {};
+        let result = new ResultDtoOfGetDtoQuery2();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["data"] = this.data ? this.data.toJSON() : <any>undefined;
+        return data;
+    }
+}
+
+export interface IResultDtoOfGetDtoQuery2 {
+    data?: GetDtoQuery2 | undefined;
+}
+
+export class GetDtoQuery2 implements IGetDtoQuery2 {
+    serviceid?: string;
+    servicename?: string | undefined;
+    coursedescription?: string | undefined;
+    serviceprice?: number | undefined;
+
+    constructor(data?: IGetDtoQuery2) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.serviceid = _data["serviceid"];
+            this.servicename = _data["servicename"];
+            this.coursedescription = _data["coursedescription"];
+            this.serviceprice = _data["serviceprice"];
+        }
+    }
+
+    static fromJS(data: any): GetDtoQuery2 {
+        data = typeof data === 'object' ? data : {};
+        let result = new GetDtoQuery2();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["serviceid"] = this.serviceid;
+        data["servicename"] = this.servicename;
+        data["coursedescription"] = this.coursedescription;
+        data["serviceprice"] = this.serviceprice;
+        return data;
+    }
+}
+
+export interface IGetDtoQuery2 {
+    serviceid?: string;
+    servicename?: string | undefined;
+    coursedescription?: string | undefined;
+    serviceprice?: number | undefined;
+}
+
+export class PagingDtoOfGetPagingDtoQuery2 implements IPagingDtoOfGetPagingDtoQuery2 {
+    items?: GetPagingDtoQuery2[] | undefined;
+    meta?: PagingModel | undefined;
+
+    constructor(data?: IPagingDtoOfGetPagingDtoQuery2) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            if (Array.isArray(_data["items"])) {
+                this.items = [] as any;
+                for (let item of _data["items"])
+                    this.items!.push(GetPagingDtoQuery2.fromJS(item));
+            }
+            this.meta = _data["meta"] ? PagingModel.fromJS(_data["meta"]) : <any>undefined;
+        }
+    }
+
+    static fromJS(data: any): PagingDtoOfGetPagingDtoQuery2 {
+        data = typeof data === 'object' ? data : {};
+        let result = new PagingDtoOfGetPagingDtoQuery2();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        if (Array.isArray(this.items)) {
+            data["items"] = [];
+            for (let item of this.items)
+                data["items"].push(item ? item.toJSON() : <any>undefined);
+        }
+        data["meta"] = this.meta ? this.meta.toJSON() : <any>undefined;
+        return data;
+    }
+}
+
+export interface IPagingDtoOfGetPagingDtoQuery2 {
+    items?: GetPagingDtoQuery2[] | undefined;
+    meta?: PagingModel | undefined;
+}
+
+export class GetPagingDtoQuery2 implements IGetPagingDtoQuery2 {
+    serviceid?: string;
+    servicename?: string | undefined;
+    coursedescription?: string | undefined;
+    serviceprice?: number | undefined;
+
+    constructor(data?: IGetPagingDtoQuery2) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.serviceid = _data["serviceid"];
+            this.servicename = _data["servicename"];
+            this.coursedescription = _data["coursedescription"];
+            this.serviceprice = _data["serviceprice"];
+        }
+    }
+
+    static fromJS(data: any): GetPagingDtoQuery2 {
+        data = typeof data === 'object' ? data : {};
+        let result = new GetPagingDtoQuery2();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["serviceid"] = this.serviceid;
+        data["servicename"] = this.servicename;
+        data["coursedescription"] = this.coursedescription;
+        data["serviceprice"] = this.serviceprice;
+        return data;
+    }
+}
+
+export interface IGetPagingDtoQuery2 {
+    serviceid?: string;
+    servicename?: string | undefined;
+    coursedescription?: string | undefined;
+    serviceprice?: number | undefined;
+}
+
+export class AddCommand2 implements IAddCommand2 {
+    servicename?: string | undefined;
+    coursedescription?: string | undefined;
+    serviceprice?: number | undefined;
+
+    constructor(data?: IAddCommand2) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.servicename = _data["servicename"];
+            this.coursedescription = _data["coursedescription"];
+            this.serviceprice = _data["serviceprice"];
+        }
+    }
+
+    static fromJS(data: any): AddCommand2 {
+        data = typeof data === 'object' ? data : {};
+        let result = new AddCommand2();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["servicename"] = this.servicename;
+        data["coursedescription"] = this.coursedescription;
+        data["serviceprice"] = this.serviceprice;
+        return data;
+    }
+}
+
+export interface IAddCommand2 {
+    servicename?: string | undefined;
+    coursedescription?: string | undefined;
+    serviceprice?: number | undefined;
+}
+
+export class EditCommand2 implements IEditCommand2 {
+    serviceid?: string;
+
+    constructor(data?: IEditCommand2) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.serviceid = _data["serviceid"];
+        }
+    }
+
+    static fromJS(data: any): EditCommand2 {
+        data = typeof data === 'object' ? data : {};
+        let result = new EditCommand2();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["serviceid"] = this.serviceid;
+        return data;
+    }
+}
+
+export interface IEditCommand2 {
+    serviceid?: string;
 }
 
 export class SwaggerException extends Error {

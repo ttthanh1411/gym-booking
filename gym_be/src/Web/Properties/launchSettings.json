@@ -11,7 +11,7 @@
     "CleanArchitecture.Web": {
       "commandName": "Project",
       "launchBrowser": true,
-      "applicationUrl": "http://localhost:5000",
+      "applicationUrl": "http://localhost:5001;https://localhost:5000",
       "environmentVariables": {
         "ASPNETCORE_HOSTINGSTARTUPASSEMBLIES": "",
         "ASPNETCORE_ENVIRONMENT": "Development"

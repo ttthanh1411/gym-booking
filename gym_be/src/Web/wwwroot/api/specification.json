@@ -212,6 +212,213 @@
           }
         }
       }
+    },
+    "/service/get": {
+      "get": {
+        "tags": [
+          "service"
+        ],
+        "operationId": "GetService",
+        "parameters": [
+          {
+            "name": "Serviceid",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "guid"
+            },
+            "x-position": 1
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResultDtoOfGetDtoQuery2"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/service/get-paging": {
+      "get": {
+        "tags": [
+          "service"
+        ],
+        "operationId": "GetPagingService",
+        "parameters": [
+          {
+            "name": "Q",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            },
+            "x-position": 1
+          },
+          {
+            "name": "Page",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "nullable": true
+            },
+            "x-position": 2
+          },
+          {
+            "name": "Size",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "nullable": true
+            },
+            "x-position": 3
+          },
+          {
+            "name": "Count",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "nullable": true
+            },
+            "x-position": 4
+          },
+          {
+            "name": "Countable",
+            "in": "query",
+            "schema": {
+              "type": "boolean",
+              "nullable": true
+            },
+            "x-position": 5
+          },
+          {
+            "name": "HasNextPage",
+            "in": "query",
+            "schema": {
+              "type": "boolean",
+              "nullable": true
+            },
+            "x-position": 6
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PagingDtoOfGetPagingDtoQuery2"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/service/add": {
+      "post": {
+        "tags": [
+          "service"
+        ],
+        "operationId": "AddService",
+        "requestBody": {
+          "x-name": "request",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AddCommand2"
+              }
+            }
+          },
+          "required": true,
+          "x-position": 1
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResultDto"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/service/edit": {
+      "put": {
+        "tags": [
+          "service"
+        ],
+        "operationId": "EditService",
+        "requestBody": {
+          "x-name": "request",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/EditCommand2"
+              }
+            }
+          },
+          "required": true,
+          "x-position": 1
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResultDto"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/service/delete": {
+      "delete": {
+        "tags": [
+          "service"
+        ],
+        "operationId": "DeleteService",
+        "parameters": [
+          {
+            "name": "Serviceid",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "guid"
+            },
+            "x-position": 1
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResultDto"
+                }
+              }
+            }
+          }
+        }
+      }
     }
   },
   "components": {
@@ -415,6 +622,116 @@
             "type": "integer",
             "format": "int32",
             "nullable": true
+          }
+        }
+      },
+      "ResultDtoOfGetDtoQuery2": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "data": {
+            "nullable": true,
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/GetDtoQuery2"
+              }
+            ]
+          }
+        }
+      },
+      "GetDtoQuery2": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "serviceid": {
+            "type": "string",
+            "format": "guid"
+          },
+          "servicename": {
+            "type": "string",
+            "nullable": true
+          },
+          "coursedescription": {
+            "type": "string",
+            "nullable": true
+          },
+          "serviceprice": {
+            "type": "number",
+            "format": "decimal",
+            "nullable": true
+          }
+        }
+      },
+      "PagingDtoOfGetPagingDtoQuery2": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "items": {
+            "type": "array",
+            "nullable": true,
+            "items": {
+              "$ref": "#/components/schemas/GetPagingDtoQuery2"
+            }
+          },
+          "meta": {
+            "nullable": true,
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/PagingModel"
+              }
+            ]
+          }
+        }
+      },
+      "GetPagingDtoQuery2": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "serviceid": {
+            "type": "string",
+            "format": "guid"
+          },
+          "servicename": {
+            "type": "string",
+            "nullable": true
+          },
+          "coursedescription": {
+            "type": "string",
+            "nullable": true
+          },
+          "serviceprice": {
+            "type": "number",
+            "format": "decimal",
+            "nullable": true
+          }
+        }
+      },
+      "AddCommand2": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "servicename": {
+            "type": "string",
+            "nullable": true
+          },
+          "coursedescription": {
+            "type": "string",
+            "nullable": true
+          },
+          "serviceprice": {
+            "type": "number",
+            "format": "decimal",
+            "nullable": true
+          }
+        }
+      },
+      "EditCommand2": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "serviceid": {
+            "type": "string",
+            "format": "guid"
           }
         }
       }
