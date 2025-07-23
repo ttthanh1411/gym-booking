@@ -25,28 +25,31 @@ const UserManagement: React.FC = () => {
   const [pageSize, setPageSize] = useState(5);
   const [totalPages, setTotalPages] = useState(0);
   const [formData, setFormData] = useState<{
+    customerid: string;
     name: string;
-    phoneNumber: string;
+    phonenumber: string;
     address: string;
     email: string;
     password?: string;
     type: number;
+    status: number;
   }>({
+    customerid: '',
     name: '',
-    phoneNumber: '',
+    phonenumber: '',
     address: '',
     email: '',
     type: 0,
     password: '',
-    
+    status: 1,
   });
   const isReadonly = modalMode === 'view';
   const fetchUsers = async () => {
     try {
       const res = await customerService.getPaged({
         keyword: searchTerm,
-        page: currentPage,
-        pageSize: pageSize
+      page: Number(currentPage) || 1,
+      pageSize: Number(pageSize) || 5,
       });
       setUsers(res.items);
       setTotalPages(res.totalPages);
@@ -78,7 +81,7 @@ const UserManagement: React.FC = () => {
 
       fetchUsers();
       setShowAddModal(false);
-      setFormData({ name: '', phoneNumber: '', address: '', email: '', password: '', type: 0 });
+      setFormData({ customerid:'',name: '', phonenumber: '', address: '', email: '', password: '', type: 0 , status: 0 });
       setSelectedUser(null);
       setModalMode(null);
       setIsLoading(false);
@@ -118,12 +121,14 @@ const UserManagement: React.FC = () => {
   const handleCloseModal = () => {
     setShowAddModal(false);
     setFormData({
+      customerid: '',
       name: '',
-      phoneNumber: '',
+      phonenumber: '',
       address: '',
       email: '',
       password: '',
       type: 1,
+      status: 1,
     });
   };
 
@@ -306,12 +311,14 @@ const UserManagement: React.FC = () => {
                           <button onClick={() => {
                             setSelectedUser(user);
                             setFormData({
+                              customerid: user.customerid,
                               name: user.name,
-                              phoneNumber: user.phonenumber,
+                              phonenumber: user.phonenumber,
                               address: user.address,
                               email: user.email,
                               password: '',
                               type: user.type,
+                              status: 1
                             });
                             setModalMode('edit');
                             setShowAddModal(true);
@@ -433,16 +440,16 @@ const UserManagement: React.FC = () => {
 
                     {/* Phone Number Field */}
                     <div>
-                      <label htmlFor="phoneNumber" className="block text-sm font-semibold text-gray-700 mb-3">
+                      <label htmlFor="phonenumber" className="block text-sm font-semibold text-gray-700 mb-3">
                         Số điện thoại
                       </label>
                       <div className="relative">
                         <Phone className="h-5 w-5 text-green-400 absolute left-3 top-1/2 transform -translate-y-1/2" />
                         <input
                           type="tel"
-                          id="phoneNumber"
-                          name="phoneNumber"
-                          value={formData.phoneNumber}
+                          id="phonenumber"
+                          name="phonenumber"
+                          value={formData.phonenumber}
                           onChange={handleInputChange}
                           required
                           className="text-black  w-full pl-10 pr-4 py-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-300 transition-all duration-200 bg-gray-50 focus:bg-white"

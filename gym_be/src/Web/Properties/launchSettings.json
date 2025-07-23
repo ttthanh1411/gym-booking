@@ -13,9 +13,7 @@
       "launchBrowser": true,
       "applicationUrl": "http://localhost:5000",
       "environmentVariables": {
-        //#if(!UseApiOnly)
         "ASPNETCORE_HOSTINGSTARTUPASSEMBLIES": "",
-        //#endif
         "ASPNETCORE_ENVIRONMENT": "Development"
       }
     },

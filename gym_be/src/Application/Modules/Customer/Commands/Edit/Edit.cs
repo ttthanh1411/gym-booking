@@ -14,8 +14,6 @@ public record EditCommand : IRequest<ResultDto>
 
     public string Password { get; set; } = null!;
 
-    public int? Status { get; set; }
-
     public int? Type { get; set; }
 }
 
