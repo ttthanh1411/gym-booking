@@ -1,0 +1,23 @@
+﻿Create a new command:
+
+```
+dotnet new ca-usecase -o Modules -ut command -rt ResultDto -fn NameModule -n NameCommand
+```
+
+Create a new query FindOne:
+
+```
+dotnet new ca-usecase -o Modules -ut query -rt ResultDto<object> -fn NameModule -n Get
+```
+
+Create a new query GetPaging:
+
+```
+dotnet new ca-usecase -o Modules -ut query -rt PagingDto<object> -fn NameModule -n GetPaging
+```
+
+Create a new query GetOptions:
+
+```
+dotnet new ca-usecase -o Modules -ut query -rt PagingDto<OptionDto<object>> -fn NameModule -n GetOptions
+```
