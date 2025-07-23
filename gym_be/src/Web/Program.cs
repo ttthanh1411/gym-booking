@@ -19,6 +19,13 @@ builder.Services.AddApplicationServices();
 builder.Services.AddInfrastructureServices(builder.Configuration);
 builder.Services.AddWebServices();
 
+builder.Logging.AddSimpleConsole(options =>
+{
+    options.IncludeScopes = true;
+    options.SingleLine = true;
+    options.TimestampFormat = "hh:mm:ss ";
+});
+
 // ✅ NSwag - Add OpenAPI document
 builder.Services.AddOpenApiDocument(config =>
 {

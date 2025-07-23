@@ -31,6 +31,7 @@ public static class DependencyInjection
 //            options.UseSqlServer(connectionString);
 //#endif
             options.UseNpgsql(connectionString);
+            options.EnableSensitiveDataLogging();
         });
 
         //services.AddScoped<IApplicationDbContext>(provider => (IApplicationDbContext)provider.GetRequiredService<ApplicationDbContext>());
