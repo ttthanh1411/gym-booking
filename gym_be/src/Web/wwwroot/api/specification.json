@@ -411,11 +411,6 @@
           "password": {
             "type": "string"
           },
-          "status": {
-            "type": "integer",
-            "format": "int32",
-            "nullable": true
-          },
           "type": {
             "type": "integer",
             "format": "int32",
