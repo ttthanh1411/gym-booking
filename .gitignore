@@ -38,3 +38,5 @@ obj/
 *.cache
 *.tmp
 gym_be/src/Web/ClientApp/src/app/web-api-client.ts
+gym_be/src/Web/appsettings.json
+gym_fe/src/service/customerService.ts
