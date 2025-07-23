@@ -1,4 +1,4 @@
-import { LoginCredentials, AuthResponse, User } from '../types/auth';
+import { LoginCredentials, AuthResponse, User } from '../type/auth';
 
 class AuthService {
   private baseUrl = '/api/auth';

@@ -1,0 +1,12 @@
+﻿b1. Cài đặt ef core bằng lệnh: dotnet tool install --global dotnet-ef (chạy lần đầu)
+b2. Bật PowerShell (Shift + chuột phải chọn PowerShell) tại thư mục Infrastructure
+b3. Chạy 1 trong các lện dưới đây
+
+#SQL SERVER
+dotnet ef dbcontext scaffold "Server=vnpost.ddns.net;Database=DUCNV_GACHA;User ID=sa;Password=bccp@123;Trusted_Connection=false;Encrypt=false;TrustServerCertificate=true" Microsoft.EntityFrameworkCore.SqlServer -c ApplicationDbContext --context-dir Data --context-namespace BackEnd.Infrastructure.Data -o ../Domain/Entities -n BackEnd.Domain.Entities  --json -f --no-build --no-onconfiguring
+
+#POSGSQL
+dotnet ef dbcontext scaffold "Host=localhost;Port=5432;Persist Security Info=True;Username=postgres;Password=admin;Database=gym" Npgsql.EntityFrameworkCore.PostgreSQL -c ApplicationDbContext --context-dir Data --context-namespace BackEnd.Infrastructure.Data -o ../Domain/Entities -n BackEnd.Domain.Entities --json -f --no-build --no-onconfiguring
+
+#ORACLE
+dotnet ef dbcontext scaffold "Data Source=(DESCRIPTION=(ADDRESS=(PROTOCOL=TCP)(HOST=172.20.20.67)(PORT=1521))(CONNECT_DATA=(SERVER=DEDICATED)(SERVICE_NAME=dbdev)));User ID=notification_center;Password=notification_center;Persist Security Info=True" Oracle.EntityFrameworkCore -o ../Domain/Entities -n BackEnd.Domain.Entities -f --no-build -c ApplicationDbContext --context-dir Data --context-namespace BackEnd.Infrastructure.Data --no-onconfiguring -f -t EXA_EXAMLE1 -t EXA_EXAMLE2 -t EXA_EXAMLE3 -t API_ENDPOINTS -t CATEGORIES -t CATEGORY_SETS -t FEEDBACKS -t FEEDBACKS_ATTACHMENTS -t ATTACK_FILE_DATA -t ATTACK_FILE -t GROUP_WORK -t MENU -t MENU_PRIVILEGES -t MESSAGE_GROUP_MEMBERS -t MESSAGE_GROUPS -t MESSAGES -t NOTIFICATION_RECEIVER_READS -t NOTIFICATION_RECEIVERS -t NOTIFICATIONS -t PRIVILEGES -t PRIVILEGES_API_ENDPOINTS -t PROJECTS -t PROJECTS_ATTACHMENTS -t ROLES -t ROLES_PRIVILEGES -t STATUS_TEMPS -t UNITS -t USER_LOGIN -t USER_ROLES -t USERS -t USERS_ROLES -t USERS_UNITS -t WORK_LOGS -t WORK_UNITS -t WORK_UNITS_ATTACHMENTS -t WORKS -t WORKS_ATTACHMENTS -t WORKS_CATEGORIES -t USERS_UNITS -t REPORT_DATA -t WORK_SENT -t REPORT_TEMPLATE -t WORKS_DOCUMENT -t UNITS_MANAGER -t AGENCY -t PROJECTS_TYPE -t ECONOMIC -t PROJECTS_ECONOMIC -t UNITS_GROUP -t UNITS_GROUP_DATA -t WORK_IMPORT_FILE -t WORK_IMPORT_DATA -t WORK_SCHEDULE_REPORT -t WORKS_TAG -t HOLIDAY
