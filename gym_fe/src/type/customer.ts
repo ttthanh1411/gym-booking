@@ -1,8 +1,8 @@
 export interface Customer {
-  customerID: string;
+  customerid: string;
   name: string;
   email: string;
-  phoneNumber: string;
+  phonenumber: string;
   address: string;
   type: number; // 1: Người tập, 0: PT
   status: number; // 1: Active, 0: Inactive
@@ -13,7 +13,7 @@ export interface Customer {
 export interface CustomerFormData {
   name: string;
   email: string;
-  phoneNumber: string;
+  phonenumber: string;
   address: string;
   password?: string;
   type?: number;
