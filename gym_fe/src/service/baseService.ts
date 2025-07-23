@@ -96,7 +96,7 @@ private async handleResponse<R>(response: Response): Promise<R> {
       }
     });
 
-    const url = `${this.baseUrl}/paged?${query.toString()}`;
+    const url = `${this.baseUrl}/get-paging?${query.toString()}`;
     const response = await fetch(url);
     return this.handleResponse<PagedResult<T>>(response);
   }
