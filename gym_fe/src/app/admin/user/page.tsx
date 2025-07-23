@@ -45,8 +45,8 @@ const UserManagement: React.FC = () => {
     try {
       const res = await customerService.getPaged({
         keyword: searchTerm,
-        page: currentPage,
-        pageSize: pageSize
+      page: Number(currentPage) || 1,
+      pageSize: Number(pageSize) || 5,
       });
       setUsers(res.items);
       setTotalPages(res.totalPages);
