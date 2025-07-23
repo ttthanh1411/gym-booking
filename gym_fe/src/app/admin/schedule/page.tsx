@@ -66,6 +66,7 @@ const ScheduleManagement: React.FC = () => {
             startTime: new Date(formData.starttime).toISOString(),
             endTime: new Date(formData.endtime).toISOString(),
         };
+        console.log("Payload:", payload);
         try {
             if (modalMode === 'edit' && selectedSchedule) {
                 await scheduleService.update(selectedSchedule.scheduleID, payload);
