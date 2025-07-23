@@ -664,7 +664,6 @@ export class EditCommand implements IEditCommand {
     address?: string | undefined;
     email?: string;
     password?: string;
-    status?: number | undefined;
     type?: number | undefined;
 
     constructor(data?: IEditCommand) {
@@ -684,7 +683,6 @@ export class EditCommand implements IEditCommand {
             this.address = _data["address"];
             this.email = _data["email"];
             this.password = _data["password"];
-            this.status = _data["status"];
             this.type = _data["type"];
         }
     }
@@ -704,7 +702,6 @@ export class EditCommand implements IEditCommand {
         data["address"] = this.address;
         data["email"] = this.email;
         data["password"] = this.password;
-        data["status"] = this.status;
         data["type"] = this.type;
         return data;
     }
@@ -717,7 +714,6 @@ export interface IEditCommand {
     address?: string | undefined;
     email?: string;
     password?: string;
-    status?: number | undefined;
     type?: number | undefined;
 }
 

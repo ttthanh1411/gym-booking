@@ -26,6 +26,13 @@ builder.Services.AddOpenApiDocument(config =>
     config.Version = "v1"; // bạn có thể thêm version nếu muốn rõ ràng
 });
 
+builder.Logging.AddSimpleConsole(options =>
+{
+    options.IncludeScopes = true;
+    options.SingleLine = true;
+    options.TimestampFormat = "hh:mm:ss ";
+});
+
 var app = builder.Build();
 // Áp dụng CORS
 app.UseCors("AllowFrontend");
