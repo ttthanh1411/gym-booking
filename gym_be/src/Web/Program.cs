@@ -2,6 +2,17 @@
 
 var builder = WebApplication.CreateBuilder(args);
 
+// Cấu hình CORS
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowFrontend",
+        policy =>
+        {
+            policy.WithOrigins("http://localhost:3000")
+                  .AllowAnyHeader()
+                  .AllowAnyMethod();
+        });
+});
 // Add services
 //builder.Services.AddKeyVaultIfConfigured(builder.Configuration);
 builder.Services.AddApplicationServices();
@@ -16,7 +27,8 @@ builder.Services.AddOpenApiDocument(config =>
 });
 
 var app = builder.Build();
-
+// Áp dụng CORS
+app.UseCors("AllowFrontend");
 // Middleware
 if (app.Environment.IsDevelopment())
 {

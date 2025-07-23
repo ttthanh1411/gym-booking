@@ -14,7 +14,7 @@ public class Customer : EndpointGroupBase
 
     public override void Map(WebApplication app)
     {
-        app.MapGroup(this, "customer")
+        app.MapGroup(this,"customer")
             .MapGet(GetCustomer, "get")
             .MapGet(GetPagingCustomer, "get-paging")
             .MapPost(AddCustomer, "add")
