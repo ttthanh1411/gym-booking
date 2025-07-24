@@ -48,8 +48,10 @@ public record GetPagingDtoQuery : IMapFrom<Entities.Customer>
     public string? Address { get; set; }
 
     public string Email { get; set; } = null!;
+
     public int? Status { get; set; }
 
+    public string Password { get; set; } = null!;
     public int? Type { get; set; }
 
 }

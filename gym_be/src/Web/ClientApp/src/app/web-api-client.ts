@@ -637,6 +637,7 @@ export class GetDtoQuery implements IGetDtoQuery {
     phonenumber?: string;
     address?: string | undefined;
     email?: string;
+    password?: string;
     status?: number | undefined;
     type?: number | undefined;
 
@@ -656,6 +657,7 @@ export class GetDtoQuery implements IGetDtoQuery {
             this.phonenumber = _data["phonenumber"];
             this.address = _data["address"];
             this.email = _data["email"];
+            this.password = _data["password"];
             this.status = _data["status"];
             this.type = _data["type"];
         }
@@ -675,6 +677,7 @@ export class GetDtoQuery implements IGetDtoQuery {
         data["phonenumber"] = this.phonenumber;
         data["address"] = this.address;
         data["email"] = this.email;
+        data["password"] = this.password;
         data["status"] = this.status;
         data["type"] = this.type;
         return data;
@@ -687,6 +690,7 @@ export interface IGetDtoQuery {
     phonenumber?: string;
     address?: string | undefined;
     email?: string;
+    password?: string;
     status?: number | undefined;
     type?: number | undefined;
 }
@@ -746,6 +750,7 @@ export class GetPagingDtoQuery implements IGetPagingDtoQuery {
     address?: string | undefined;
     email?: string;
     status?: number | undefined;
+    password?: string;
     type?: number | undefined;
 
     constructor(data?: IGetPagingDtoQuery) {
@@ -765,6 +770,7 @@ export class GetPagingDtoQuery implements IGetPagingDtoQuery {
             this.address = _data["address"];
             this.email = _data["email"];
             this.status = _data["status"];
+            this.password = _data["password"];
             this.type = _data["type"];
         }
     }
@@ -784,6 +790,7 @@ export class GetPagingDtoQuery implements IGetPagingDtoQuery {
         data["address"] = this.address;
         data["email"] = this.email;
         data["status"] = this.status;
+        data["password"] = this.password;
         data["type"] = this.type;
         return data;
     }
@@ -796,6 +803,7 @@ export interface IGetPagingDtoQuery {
     address?: string | undefined;
     email?: string;
     status?: number | undefined;
+    password?: string;
     type?: number | undefined;
 }
 
@@ -955,6 +963,7 @@ export class EditCommand implements IEditCommand {
     email?: string;
     password?: string;
     type?: number | undefined;
+    status?: number | undefined;
 
     constructor(data?: IEditCommand) {
         if (data) {
@@ -974,6 +983,7 @@ export class EditCommand implements IEditCommand {
             this.email = _data["email"];
             this.password = _data["password"];
             this.type = _data["type"];
+            this.status = _data["status"];
         }
     }
 
@@ -993,6 +1003,7 @@ export class EditCommand implements IEditCommand {
         data["email"] = this.email;
         data["password"] = this.password;
         data["type"] = this.type;
+        data["status"] = this.status;
         return data;
     }
 }
@@ -1005,6 +1016,7 @@ export interface IEditCommand {
     email?: string;
     password?: string;
     type?: number | undefined;
+    status?: number | undefined;
 }
 
 export class ResultDtoOfGetDtoQuery2 implements IResultDtoOfGetDtoQuery2 {

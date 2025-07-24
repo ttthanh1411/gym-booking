@@ -15,6 +15,8 @@ public record EditCommand : IRequest<ResultDto>
     public string Password { get; set; } = null!;
 
     public int? Type { get; set; }
+
+    public int? Status { get; set; }
 }
 
 public class EditCommandValidator : AbstractValidator<EditCommand>

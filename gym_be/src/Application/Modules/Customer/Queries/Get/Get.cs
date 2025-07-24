@@ -43,6 +43,8 @@ public record GetDtoQuery : IMapFrom<Entities.Customer>
 
     public string Email { get; set; } = null!;
 
+    public string Password { get; set; } = null!;
+
     public int? Status { get; set; }
 
     public int? Type { get; set; }

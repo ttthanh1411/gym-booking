@@ -458,6 +458,9 @@
           "email": {
             "type": "string"
           },
+          "password": {
+            "type": "string"
+          },
           "status": {
             "type": "integer",
             "format": "int32",
@@ -516,6 +519,9 @@
             "type": "integer",
             "format": "int32",
             "nullable": true
+          },
+          "password": {
+            "type": "string"
           },
           "type": {
             "type": "integer",
@@ -619,6 +625,11 @@
             "type": "string"
           },
           "type": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "status": {
             "type": "integer",
             "format": "int32",
             "nullable": true

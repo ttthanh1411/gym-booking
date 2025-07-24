@@ -53,7 +53,6 @@ const UserManagement: React.FC = () => {
       });
       setUsers(res.items);
       setTotalPages(Math.ceil((res.meta.count || 0) / pageSize));
-      debugger
     } catch (err) {
       console.error('Lỗi khi fetch users:', err);
       showNotification('error', 'Không thể tải danh sách người dùng');
@@ -69,10 +68,6 @@ const UserManagement: React.FC = () => {
     setIsLoading(true);
     try {
       if (modalMode === 'edit' && selectedUser) {
-        const updatedData = { ...formData };
-        if (!updatedData.password?.trim()) {
-          delete updatedData.password;
-        }
         await customerService.update(selectedUser.customerid, formData);
         showNotification('success', 'Cập nhật người dùng thành công!');
       } else {
@@ -97,6 +92,13 @@ const UserManagement: React.FC = () => {
     switch (type) {
       case 1: return 'Người Tập';
       case 0: return 'PT';
+    }
+  };
+
+  const getStatusLabel = (status: number) => {
+    switch (status) {
+      case 1: return 'Còn Hoạt Động';
+      case 0: return 'Ngưng Hoạt Động';
     }
   };
 
@@ -135,6 +137,13 @@ const UserManagement: React.FC = () => {
 
   const getTypeColor = (type: number) => {
     switch (type) {
+      case 1: return 'bg-green-100 text-center text-green-800';
+      case 0: return 'bg-red-100 text-center text-red-800';
+    }
+  };
+
+  const getStatusColor = (status: number) => {
+    switch (status) {
       case 1: return 'bg-green-100 text-center text-green-800';
       case 0: return 'bg-red-100 text-center text-red-800';
     }
@@ -265,6 +274,9 @@ const UserManagement: React.FC = () => {
                     Email
                   </th>
                   <th className="px-6 py-4 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Trạng Thái
+                  </th>
+                  <th className="px-6 py-4 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">
                     Thao tác
                   </th>
                 </tr>
@@ -301,12 +313,26 @@ const UserManagement: React.FC = () => {
                       <td className="px-6 py-4 whitespace-nowrap text-center text-sm text-gray-500">
                         {user.email}
                       </td>
+                      <td className="px-6 py-4 whitespace-nowrap text-center">
+                        <span className={`inline-flex px-3 py-1 text-xs font-semibold rounded-full ${getStatusColor(user.status)}`}>
+                          {getStatusLabel(user.status)}
+                        </span>
+                      </td>
                       <td className="px-6 py-4 whitespace-nowrap text-center text-sm font-medium">
                         <div className="flex items-center justify-center space-x-2">
-                          <button onClick={() => {
-                            setSelectedUser(user);
-                            setShowViewModal(true);
-                          }} className="text-blue-600 hover:text-blue-900 transition-colors p-1 hover:bg-blue-50 rounded">
+                          <button
+                            onClick={async () => {
+                              try {
+                                const userDetail = await customerService.getOne(user.customerid);
+                                setSelectedUser(userDetail);
+                                setShowViewModal(true);
+                                debugger
+                              } catch (err) {
+                                showNotification('error', 'Không thể tải thông tin người dùng');
+                              }
+                            }}
+                            className="text-blue-600 hover:text-blue-900 transition-colors p-1 hover:bg-blue-50 rounded"
+                          >
                             <Eye className="h-4 w-4" />
                           </button>
                           <button onClick={() => {
@@ -317,9 +343,9 @@ const UserManagement: React.FC = () => {
                               phonenumber: user.phonenumber,
                               address: user.address,
                               email: user.email,
-                              password: '',
+                              password: user.password,
                               type: user.type,
-                              status: 1
+                              status: user.status
                             });
                             setModalMode('edit');
                             setShowAddModal(true);
@@ -553,10 +579,37 @@ const UserManagement: React.FC = () => {
                           name="password"
                           value={formData.password}
                           onChange={handleInputChange}
-                          required={modalMode === 'add'}
+                          required
                           className=" text-black w-full pl-10 pr-4 py-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-300 transition-all duration-200 bg-gray-50 focus:bg-white"
                           placeholder="Enter password"
                         />
+                      </div>
+                    </div>
+                    {/* Status Selection Field */}
+                    <div>
+                      <label htmlFor="status" className="block text-sm font-semibold text-gray-700 mb-3">
+                        Trạng thái hoạt động
+                      </label>
+                      <div className="relative">
+                        <User className="h-5 w-5 text-indigo-400 absolute left-3 top-1/2 transform -translate-y-1/2" />
+                        <select
+                          id="status"
+                          name="status"
+                          value={formData.status}
+                          onChange={(e) =>
+                            setFormData((prev) => ({
+                              ...prev,
+                              status: Number(e.target.value),
+                            }))
+                          }
+                          disabled={isReadonly}
+                          className="w-full text-black pl-10 pr-4 py-3 border border-gray-200 rounded-lg
+                                    focus:ring-2 focus:ring-blue-500 focus:border-blue-300 transition-all
+                                    duration-200 bg-gray-50 focus:bg-white appearance-none"
+                        >
+                          <option value={1}>Còn Hoạt Động</option>
+                          <option value={0}>Ngưng Hoạt Động</option>
+                        </select>
                       </div>
                     </div>
 
@@ -639,24 +692,30 @@ const UserManagement: React.FC = () => {
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div>
                     <label className="text-sm font-semibold text-gray-700">Họ tên</label>
-                    <p className="mt-1 text-gray-900">{selectedUser.name}</p>
+                    <p className="mt-1 text-gray-900">{selectedUser.data.name}</p>
                   </div>
                   <div>
                     <label className="text-sm font-semibold text-gray-700">Số điện thoại</label>
-                    <p className="mt-1 text-gray-900">{selectedUser.phonenumber}</p>
+                    <p className="mt-1 text-gray-900">{selectedUser.data.phonenumber}</p>
                   </div>
                   <div>
                     <label className="text-sm font-semibold text-gray-700">Email</label>
-                    <p className="mt-1 text-gray-900">{selectedUser.email}</p>
+                    <p className="mt-1 text-gray-900">{selectedUser.data.email}</p>
                   </div>
                   <div>
                     <label className="text-sm font-semibold text-gray-700">Địa chỉ</label>
-                    <p className="mt-1 text-gray-900">{selectedUser.address}</p>
+                    <p className="mt-1 text-gray-900">{selectedUser.data.address}</p>
                   </div>
                   <div>
                     <label className="text-sm font-semibold text-gray-700">Loại người dùng</label>
-                    <p className={`mt-1 text-sm font-semibold ${getTypeColor(selectedUser.type)}`}>
-                      {getTypeLabel(selectedUser.type)}
+                    <p className={`mt-1 text-sm font-semibold ${getStatusColor(selectedUser.data.status)}`}>
+                      {getStatusLabel(selectedUser.data.status)}
+                    </p>
+                  </div>
+                  <div>
+                    <label className="text-sm font-semibold text-gray-700">Loại người dùng</label>
+                    <p className={`mt-1 text-sm font-semibold ${getTypeColor(selectedUser.data.type)}`}>
+                      {getTypeLabel(selectedUser.data.type)}
                     </p>
                   </div>
                 </div>
