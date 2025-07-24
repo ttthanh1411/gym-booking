@@ -48,21 +48,22 @@ const UserManagement: React.FC = () => {
     try {
       const res = await customerService.getPaged({
         keyword: searchTerm,
-      page: Number(currentPage) || 1,
-      pageSize: Number(pageSize) || 5,
+        page: Number(currentPage) || 1,
+        pageSize: Number(pageSize) || 5,
       });
       setUsers(res.items);
-      setTotalPages(res.totalPages);
+      setTotalPages(Math.ceil((res.meta.count || 0) / pageSize));
+      debugger
     } catch (err) {
       console.error('Lỗi khi fetch users:', err);
       showNotification('error', 'Không thể tải danh sách người dùng');
     }
   };
 
+
   useEffect(() => {
     fetchUsers();
   }, [searchTerm, currentPage, pageSize]);
-
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
@@ -81,7 +82,7 @@ const UserManagement: React.FC = () => {
 
       fetchUsers();
       setShowAddModal(false);
-      setFormData({ customerid:'',name: '', phonenumber: '', address: '', email: '', password: '', type: 0 , status: 0 });
+      setFormData({ customerid: '', name: '', phonenumber: '', address: '', email: '', password: '', type: 0, status: 0 });
       setSelectedUser(null);
       setModalMode(null);
       setIsLoading(false);
@@ -350,7 +351,7 @@ const UserManagement: React.FC = () => {
           <div className="flex items-center justify-between">
             <div className="text-sm text-gray-700">
               <div className="text-sm text-gray-700">
-                Trang <span className="font-medium">{currentPage}</span> / <span className="font-medium">{totalPages}</span>
+                Trang <span className="font-medium">{Number(currentPage) || 1}</span> / <span className="font-medium">{Number(totalPages) || 1}</span>
               </div>
             </div>
             <div className="text-black flex items-center space-x-2">
@@ -358,7 +359,7 @@ const UserManagement: React.FC = () => {
                 value={pageSize}
                 onChange={(e) => {
                   setPageSize(Number(e.target.value));
-                  setCurrentPage(1); // reset về page đầu
+                  setCurrentPage(1);
                 }}
                 className="ml-4 px-3 py-1 border rounded-md"
               >
@@ -372,15 +373,53 @@ const UserManagement: React.FC = () => {
                 className="text-black px-3 py-1 border border-gray-300 rounded-md hover:bg-gray-50 transition-colors">
                 Quay lại
               </button>
-              {Array.from({ length: totalPages }, (_, i) => i + 1).map((pageNum) => (
-                <button
-                  key={pageNum}
-                  onClick={() => setCurrentPage(pageNum)}
-                  className={`px-3 py-1 rounded-md ${pageNum === currentPage ? 'bg-blue-600 text-white' : 'border border-gray-300'}`}
-                >
-                  {pageNum}
-                </button>
-              ))}
+              {/* Smart Pagination Buttons */}
+              {(() => {
+                const pageButtons = [];
+                const maxButtons = 5;
+                let start = Math.max(1, currentPage - 2);
+                let end = Math.min(totalPages, currentPage + 2);
+
+                if (currentPage <= 3) {
+                  end = Math.min(totalPages, maxButtons);
+                } else if (currentPage >= totalPages - 2) {
+                  start = Math.max(1, totalPages - maxButtons + 1);
+                }
+
+                if (start > 1) {
+                  pageButtons.push(
+                    <button
+                      key={1}
+                      onClick={() => setCurrentPage(1)}
+                      className={`px-3 py-1 rounded-md ${currentPage === 1 ? 'bg-blue-600 text-white' : 'border border-gray-300'}`}
+                    >1</button>
+                  );
+                  if (start > 2) pageButtons.push(<span key="start-ellipsis" className="px-2">...</span>);
+                }
+
+                for (let i = start; i <= end; i++) {
+                  pageButtons.push(
+                    <button
+                      key={i}
+                      onClick={() => setCurrentPage(i)}
+                      className={`px-3 py-1 rounded-md ${i === currentPage ? 'bg-blue-600 text-white' : 'border border-gray-300'}`}
+                    >{i}</button>
+                  );
+                }
+
+                if (end < totalPages) {
+                  if (end < totalPages - 1) pageButtons.push(<span key="end-ellipsis" className="px-2">...</span>);
+                  pageButtons.push(
+                    <button
+                      key={totalPages}
+                      onClick={() => setCurrentPage(totalPages)}
+                      className={`px-3 py-1 rounded-md ${currentPage === totalPages ? 'bg-blue-600 text-white' : 'border border-gray-300'}`}
+                    >{totalPages}</button>
+                  );
+                }
+
+                return pageButtons;
+              })()}
               <button
                 onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
                 disabled={currentPage === totalPages}

@@ -25,11 +25,11 @@ public static class DependencyInjection
         {
             options.AddInterceptors(sp.GetServices<ISaveChangesInterceptor>());
 
-//#if (UseSQLite)
-//            options.UseSqlite(connectionString);
-//#else
-//            options.UseSqlServer(connectionString);
-//#endif
+            //#if (UseSQLite)
+            //            options.UseSqlite(connectionString);
+            //#else
+            //            options.UseSqlServer(connectionString);
+            //#endif
             options.UseNpgsql(connectionString);
             options.EnableSensitiveDataLogging();
         });
@@ -38,23 +38,23 @@ public static class DependencyInjection
 
         //services.AddScoped<ApplicationDbContextInitialiser>();
 
-//#if (UseApiOnly)
-//        services.AddAuthentication()
-//            .AddBearerToken(IdentityConstants.BearerScheme);
+        //#if (UseApiOnly)
+        //        services.AddAuthentication()
+        //            .AddBearerToken(IdentityConstants.BearerScheme);
 
-//        services.AddAuthorizationBuilder();
+        //        services.AddAuthorizationBuilder();
 
-//        //services
-//        //    .AddIdentityCore<ApplicationUser>()
-//        //    .AddRoles<IdentityRole>()
-//        //    .AddEntityFrameworkStores<ApplicationDbContext>()
-//        //    .AddApiEndpoints();
-//#else
+        //        //services
+        //        //    .AddIdentityCore<ApplicationUser>()
+        //        //    .AddRoles<IdentityRole>()
+        //        //    .AddEntityFrameworkStores<ApplicationDbContext>()
+        //        //    .AddApiEndpoints();
+        //#else
         //services
         //    .AddDefaultIdentity<ApplicationUser>()
         //    .AddRoles<IdentityRole>()
         //    .AddEntityFrameworkStores<ApplicationDbContext>();
-//#endif
+        //#endif
 
         services.AddSingleton(TimeProvider.System);
         //services.AddTransient<IIdentityService, IdentityService>();

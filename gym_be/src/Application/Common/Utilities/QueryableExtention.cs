@@ -26,7 +26,7 @@ public static class QueryableExtention
 
         if (option.Size == null || option.Size <= 0)
         {
-            option.Size = 10;
+            option.Size = 5;
         }
 
         if (option.Size > 5000)

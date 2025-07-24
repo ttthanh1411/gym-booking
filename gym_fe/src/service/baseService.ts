@@ -1,11 +1,14 @@
 // src/services/baseService.ts
 
 export interface PagedResult<T> {
-  totalItems: number;
-  page: number;
-  pageSize: number;
-  totalPages: number;
   items: T[];
+  meta: {
+    page: number;
+    size: number;
+    count: number;
+    countable?: number | null;
+    hasNextPage?: boolean | null;
+  };
 }
 
 export default class BaseService<T> {
