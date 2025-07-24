@@ -45,7 +45,7 @@ const ScheduleManagement: React.FC = () => {
             }
             const res = await scheduleService.getPaged(params);
             setSchedules(res.items);
-            setTotalPages(res.totalPages);
+            setTotalPages(res.meta.count);
         } catch (err) {
             console.error('Error fetching schedules:', err);
             showNotification('error', 'Không thể tải danh sách lịch trình');

@@ -57,7 +57,7 @@ const ServiceManagement: React.FC = () => {
       };
       const res = await serviceService.getPaged(params);
       setServices(res.items);
-      setTotalPages(res.totalPages);
+      setTotalPages(res.meta.count);
     } catch (err) {
       console.error('Error fetching services:', err);
       showNotification('error', 'Không thể tải danh sách dịch vụ');
