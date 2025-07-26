@@ -3,6 +3,10 @@ import React, { useEffect, useState } from 'react';
 import { Calendar, Plus, Search, Filter, MoreVertical, Edit2, Trash2, Eye, X, Clock, Users, CalendarDays, CheckCircle, AlertCircle } from 'lucide-react';
 import scheduleService from '../../../service/scheduleService';
 import { Schedule, ScheduleFormData } from '../../../type/schedule';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+import { StaticDatePicker } from '@mui/x-date-pickers/StaticDatePicker';
 
 interface ToastNotification {
     id: string;
@@ -25,10 +29,11 @@ const ScheduleManagement: React.FC = () => {
     const [pageSize, setPageSize] = useState(5);
     const [totalPages, setTotalPages] = useState(0);
     const [formData, setFormData] = useState<ScheduleFormData>({
+        scheduleid: '',
         dayofweek: 'Thứ 2',
         maxparticipants: 2,
-        starttime: '',
-        endtime: ''
+        starttime: 0,
+        endtime: 0
     });
 
     const daysOfWeek = ['Thứ 2', 'Thứ 3', 'Thứ 4', 'Thứ 5', 'Thứ 6', 'Thứ 7', 'Chủ Nhật'];
@@ -45,7 +50,7 @@ const ScheduleManagement: React.FC = () => {
             }
             const res = await scheduleService.getPaged(params);
             setSchedules(res.items);
-            setTotalPages(res.meta.count);
+            setTotalPages(Math.ceil((res.meta.count || 0) / pageSize));
         } catch (err) {
             console.error('Error fetching schedules:', err);
             showNotification('error', 'Không thể tải danh sách lịch trình');
@@ -61,15 +66,16 @@ const ScheduleManagement: React.FC = () => {
         e.preventDefault();
         setIsLoading(true);
         const payload: Partial<Schedule> = {
-            dayOfWeek: formData.dayofweek,
-            maxParticipants: formData.maxparticipants,
-            startTime: new Date(formData.starttime).toISOString(),
-            endTime: new Date(formData.endtime).toISOString(),
+            scheduleid: formData.scheduleid,
+            dayofweek: formData.dayofweek,
+            maxparticipants: formData.maxparticipants,
+            starttime: formData.starttime,
+            endtime: formData.endtime,
         };
         console.log("Payload:", payload);
         try {
             if (modalMode === 'edit' && selectedSchedule) {
-                await scheduleService.update(selectedSchedule.scheduleID, payload);
+                await scheduleService.update(selectedSchedule.scheduleid, payload);
                 showNotification('success', 'Cập nhật lịch trình thành công!');
             } else {
                 await scheduleService.create(payload);
@@ -79,10 +85,11 @@ const ScheduleManagement: React.FC = () => {
             fetchSchedules();
             setShowAddModal(false);
             setFormData({
+                scheduleid: '',
                 dayofweek: 'Monday',
                 maxparticipants: 20,
-                starttime: '',
-                endtime: ''
+                starttime: 0,
+                endtime: 0
             });
             setSelectedSchedule(null);
             setModalMode(null);
@@ -117,16 +124,17 @@ const ScheduleManagement: React.FC = () => {
         setShowAddModal(false);
         setShowViewModal(false);
         setFormData({
+            scheduleid: '',
             dayofweek: 'Thứ 2',
             maxparticipants: 20,
-            starttime: '',
-            endtime: ''
+            starttime: 0,
+            endtime: 0
         });
         setSelectedSchedule(null);
         setModalMode(null);
     };
 
-    const formatTime = (timeString: string) => {
+    const formatTime = (timeString: number) => {
         const date = new Date(timeString);
         return date.toLocaleTimeString('vi-VN', {
             hour: '2-digit',
@@ -288,17 +296,17 @@ const ScheduleManagement: React.FC = () => {
                                     </tr>
                                 ) : (
                                     schedules.map((schedule) => (
-                                        <tr key={schedule.scheduleID} className="hover:bg-gray-50 transition-colors">
+                                        <tr key={schedule.scheduleid} className="hover:bg-gray-50 transition-colors">
                                             <td className="px-6 py-4 whitespace-nowrap">
                                                 <div className="flex items-center">
                                                     <div className="h-10 w-10 bg-gradient-to-r from-blue-500 to-purple-600 rounded-lg flex items-center justify-center">
                                                         <CalendarDays className="h-5 w-5 text-white" />
                                                     </div>
                                                     <div className="ml-4">
-                                                        <span className={`inline-flex px-3 py-1 text-xs font-semibold rounded-full ${getDayColor(schedule.dayOfWeek)}`}>
-                                                            {schedule.dayOfWeek}
+                                                        <span className={`inline-flex px-3 py-1 text-xs font-semibold rounded-full ${getDayColor(schedule.dayofweek)}`}>
+                                                            {schedule.dayofweek}
                                                         </span>
-                                                        <div className="text-sm text-gray-500 mt-1">ID: {schedule.scheduleID}</div>
+                                                        <div className="text-sm text-gray-500 mt-1">ID: {schedule.scheduleid}</div>
                                                     </div>
                                                 </div>
                                             </td>
@@ -306,7 +314,7 @@ const ScheduleManagement: React.FC = () => {
                                                 <div className="flex items-center justify-center space-x-2">
                                                     <Clock className="h-4 w-4 text-gray-400" />
                                                     <span className="text-sm font-medium text-gray-900">
-                                                        {formatTime(schedule.startTime)} - {formatTime(schedule.endTime)}
+                                                        {formatTime(schedule.starttime)} - {formatTime(schedule.endtime)}
                                                     </span>
                                                 </div>
                                             </td>
@@ -314,7 +322,7 @@ const ScheduleManagement: React.FC = () => {
                                                 <div className="flex items-center justify-center space-x-2">
                                                     <Users className="h-4 w-4 text-gray-400" />
                                                     <span className="text-sm font-medium text-gray-900">
-                                                        {schedule.maxParticipants} người
+                                                        {schedule.maxparticipants} người
                                                     </span>
                                                 </div>
                                             </td>
@@ -333,10 +341,11 @@ const ScheduleManagement: React.FC = () => {
                                                         onClick={() => {
                                                             setSelectedSchedule(schedule);
                                                             setFormData({
-                                                                dayofweek: schedule.dayOfWeek,
-                                                                maxparticipants: schedule.maxParticipants,
-                                                                starttime: schedule.startTime,
-                                                                endtime: schedule.endTime,
+                                                                scheduleid: schedule.scheduleid,
+                                                                dayofweek: schedule.dayofweek,
+                                                                maxparticipants: schedule.maxparticipants,
+                                                                starttime: schedule.starttime,
+                                                                endtime: schedule.endtime,
                                                             });
                                                             setModalMode('edit');
                                                             setShowAddModal(true);
@@ -346,7 +355,7 @@ const ScheduleManagement: React.FC = () => {
                                                         <Edit2 className="h-4 w-4" />
                                                     </button>
                                                     <button
-                                                        onClick={() => handleDelete(schedule.scheduleID)}
+                                                        onClick={() => handleDelete(schedule.scheduleid)}
                                                         className="text-red-600 hover:text-red-900 transition-colors p-2 hover:bg-red-50 rounded-lg"
                                                     >
                                                         <Trash2 className="h-4 w-4" />
@@ -471,8 +480,7 @@ const ScheduleManagement: React.FC = () => {
                                                 Thời gian bắt đầu
                                             </label>
                                             <div className="relative">
-                                                <Clock className="h-5 w-5 text-green-400 absolute left-3 top-1/2 transform -translate-y-1/2" />
-                                                <input
+                                                {/* <input
                                                     type="datetime-local"
                                                     id="starttime"
                                                     name="starttime"
@@ -480,7 +488,11 @@ const ScheduleManagement: React.FC = () => {
                                                     onChange={handleInputChange}
                                                     required
                                                     className="text-gray-900 w-full pl-10 pr-4 py-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-300 transition-all duration-200 bg-gray-50 focus:bg-white"
-                                                />
+                                                /> */}
+                                                <LocalizationProvider dateAdapter={AdapterDayjs}>
+                                                    <StaticDatePicker orientation="landscape" />
+                                                </LocalizationProvider>
+
                                             </div>
                                         </div>
 
@@ -575,14 +587,14 @@ const ScheduleManagement: React.FC = () => {
                                         <div>
                                             <label className="text-sm font-semibold text-gray-700">ID lịch trình</label>
                                             <p className="mt-1 text-gray-900 font-mono text-sm bg-gray-50 px-3 py-2 rounded-lg">
-                                                {selectedSchedule.scheduleID}
+                                                {selectedSchedule.scheduleid}
                                             </p>
                                         </div>
                                         <div>
                                             <label className="text-sm font-semibold text-gray-700">Ngày trong tuần</label>
                                             <div className="mt-1">
-                                                <span className={`inline-flex px-3 py-1 text-sm font-semibold rounded-full ${getDayColor(selectedSchedule.dayOfWeek)}`}>
-                                                    {selectedSchedule.dayOfWeek}
+                                                <span className={`inline-flex px-3 py-1 text-sm font-semibold rounded-full ${getDayColor(selectedSchedule.dayofweek)}`}>
+                                                    {selectedSchedule.dayofweek}
                                                 </span>
                                             </div>
                                         </div>
@@ -593,7 +605,7 @@ const ScheduleManagement: React.FC = () => {
                                             <div className="mt-1 flex items-center space-x-2">
                                                 <Clock className="h-4 w-4 text-gray-400" />
                                                 <span className="text-gray-900 font-medium">
-                                                    {formatTime(selectedSchedule.startTime)} - {formatTime(selectedSchedule.endTime)}
+                                                    {formatTime(selectedSchedule.starttime)} - {formatTime(selectedSchedule.endtime)}
                                                 </span>
                                             </div>
                                         </div>
@@ -602,7 +614,7 @@ const ScheduleManagement: React.FC = () => {
                                             <div className="mt-1 flex items-center space-x-2">
                                                 <Users className="h-4 w-4 text-gray-400" />
                                                 <span className="text-gray-900 font-medium">
-                                                    {selectedSchedule.maxParticipants} người
+                                                    {selectedSchedule.maxparticipants} người
                                                 </span>
                                             </div>
                                         </div>

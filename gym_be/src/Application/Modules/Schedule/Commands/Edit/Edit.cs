@@ -20,11 +20,14 @@ public class EditCommandValidator : AbstractValidator<EditCommand>
     }
 }
 
-public class EditCommandHandler(ApplicationDbContext context,IMapper map) : IRequestHandler<EditCommand, ResultDto>
+public class EditCommandHandler(ApplicationDbContext context, IMapper map) : IRequestHandler<EditCommand, ResultDto>
 {
     public async Task<ResultDto> Handle(EditCommand request, CancellationToken cancellationToken)
     {
-        var dataOld = await context.Schedules.FirstAsync(x => x.Scheduleid == request.Scheduleid);
+        var dataOld = await context.Schedules.FirstOrDefaultAsync(x => x.Scheduleid == request.Scheduleid, cancellationToken);
+
+        if (dataOld == null)
+            throw new NotFoundException(nameof(Schedule), request.Scheduleid.ToString());
 
         context.Schedules.Entry(dataOld!).CurrentValues.SetValues(request);
 

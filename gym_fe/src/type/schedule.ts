@@ -1,16 +1,17 @@
 export interface Schedule {
-  scheduleID: string;
-  dayOfWeek: string;
-  startTime: string;
-  endTime: string;
-  maxParticipants: number;
+  scheduleid: string;
+  dayofweek: string;
+  starttime: number;
+  endtime: number;
+  maxparticipants: number;
 }
 
 export interface ScheduleFormData {
+  scheduleid: string;
   dayofweek: string;
   maxparticipants: number;
-  starttime: string;
-  endtime: string;
+  starttime: number;
+  endtime: number;
 }
 
 export interface ScheduleApiResponse {

@@ -1,19 +1,19 @@
 'use client';
 import React, { useEffect, useState } from 'react';
-import { 
-  Package, 
-  Plus, 
-  Search, 
-  Filter, 
-  MoreVertical, 
-  Edit2, 
-  Trash2, 
-  Eye, 
-  X, 
-  DollarSign, 
-  FileText, 
+import {
+  Package,
+  Plus,
+  Search,
+  Filter,
+  MoreVertical,
+  Edit2,
+  Trash2,
+  Eye,
+  X,
+  DollarSign,
+  FileText,
   Tag,
-  CheckCircle, 
+  CheckCircle,
   AlertCircle,
 } from 'lucide-react';
 import serviceService from '../../../service/serviceService';
@@ -50,15 +50,13 @@ const ServiceManagement: React.FC = () => {
   const fetchServices = async () => {
     try {
       const params = {
-        keyword: searchTerm.trim(),
-        minPrice,
-        maxPrice,
-        page: currentPage,
-        pageSize
+        keyword: searchTerm,
+        page: Number(currentPage) || 1,
+        pageSize: Number(pageSize) || 5,
       };
       const res = await serviceService.getPaged(params);
       setServices(res.items);
-      setTotalPages(res.meta.count);
+      setTotalPages(Math.ceil((res.meta.count || 0) / pageSize));
     } catch (err) {
       console.error('Error fetching services:', err);
       showNotification('error', 'Không thể tải danh sách dịch vụ');
@@ -67,29 +65,29 @@ const ServiceManagement: React.FC = () => {
 
   useEffect(() => {
     fetchServices();
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [searchTerm, minPrice, maxPrice, currentPage, pageSize]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     if (!formData.servicename.trim()) {
       showNotification('error', 'Vui lòng nhập tên dịch vụ');
       return;
     }
-    
+
     if (!formData.coursedescription.trim()) {
       showNotification('error', 'Vui lòng nhập mô tả dịch vụ');
       return;
     }
-    
+
     if (formData.serviceprice <= 0) {
       showNotification('error', 'Giá dịch vụ phải lớn hơn 0');
       return;
     }
 
     setIsLoading(true);
-    
+
     try {
       if (modalMode === 'edit' && selectedService) {
         await serviceService.update(selectedService.serviceid, formData);
@@ -183,27 +181,24 @@ const ServiceManagement: React.FC = () => {
         {notifications.map((notification) => (
           <div
             key={notification.id}
-            className={`transform transition-all duration-300 ease-in-out ${
-              notification.visible ? 'translate-x-0 opacity-100' : 'translate-x-full opacity-0'
-            }`}
+            className={`transform transition-all duration-300 ease-in-out ${notification.visible ? 'translate-x-0 opacity-100' : 'translate-x-full opacity-0'
+              }`}
           >
-            <div className={`flex items-center p-4 rounded-lg shadow-lg min-w-80 ${
-              notification.type === 'success'
+            <div className={`flex items-center p-4 rounded-lg shadow-lg min-w-80 ${notification.type === 'success'
                 ? 'bg-green-50 border-l-4 border-green-400'
                 : notification.type === 'error'
-                ? 'bg-red-50 border-l-4 border-red-400'
-                : 'bg-yellow-50 border-l-4 border-yellow-400'
-            }`}>
+                  ? 'bg-red-50 border-l-4 border-red-400'
+                  : 'bg-yellow-50 border-l-4 border-yellow-400'
+              }`}>
               {notification.type === 'success' && <CheckCircle className="h-5 w-5 text-green-400 mr-3" />}
               {notification.type === 'error' && <AlertCircle className="h-5 w-5 text-red-400 mr-3" />}
               {notification.type === 'warning' && <AlertCircle className="h-5 w-5 text-yellow-400 mr-3" />}
-              <span className={`text-sm font-medium ${
-                notification.type === 'success'
+              <span className={`text-sm font-medium ${notification.type === 'success'
                   ? 'text-green-800'
                   : notification.type === 'error'
-                  ? 'text-red-800'
-                  : 'text-yellow-800'
-              }`}>
+                    ? 'text-red-800'
+                    : 'text-yellow-800'
+                }`}>
                 {notification.message}
               </span>
             </div>
@@ -340,8 +335,8 @@ const ServiceManagement: React.FC = () => {
                         <div className="flex items-start space-x-2">
                           <FileText className="h-4 w-4 text-gray-400 mt-0.5 flex-shrink-0" />
                           <p className="text-sm text-gray-900 line-clamp-2">
-                            {service.coursedescription.length > 80 
-                              ? `${service.coursedescription.substring(0, 80)}...` 
+                            {service.coursedescription.length > 80
+                              ? `${service.coursedescription.substring(0, 80)}...`
                               : service.coursedescription}
                           </p>
                         </div>
@@ -430,11 +425,10 @@ const ServiceManagement: React.FC = () => {
                   <button
                     key={`page-${pageNum}`}
                     onClick={() => setCurrentPage(pageNum)}
-                    className={`px-3 py-2 rounded-md transition-colors ${
-                      pageNum === currentPage
+                    className={`px-3 py-2 rounded-md transition-colors ${pageNum === currentPage
                         ? 'bg-green-600 text-white'
                         : 'border border-gray-300 hover:bg-gray-50'
-                    }`}
+                      }`}
                   >
                     {pageNum}
                   </button>
@@ -576,7 +570,7 @@ const ServiceManagement: React.FC = () => {
 
         {/* View Service Modal */}
         {showViewModal && selectedService && (
-          <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black bg-opacity-50"  style={{ backgroundColor: 'rgba(0, 0, 0, 0.25)' }}>
+          <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black bg-opacity-50" style={{ backgroundColor: 'rgba(0, 0, 0, 0.25)' }}>
             <div className="bg-white rounded-2xl shadow-2xl w-full max-w-2xl max-h-[90vh] overflow-y-auto">
               {/* Header */}
               <div className="flex items-center justify-between p-6 border-b bg-gradient-to-r from-green-50 to-blue-50">
@@ -603,7 +597,7 @@ const ServiceManagement: React.FC = () => {
                       {selectedService.serviceid}
                     </p>
                   </div>
-                  
+
                   <div>
                     <label className="text-sm font-semibold text-gray-700">Tên dịch vụ</label>
                     <p className="mt-1 text-gray-900 font-medium text-lg">

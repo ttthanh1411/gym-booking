@@ -10,13 +10,20 @@
   },
   "dependencies": {
     "@emotion/cache": "^11.14.0",
+    "@emotion/react": "^11.14.0",
+    "@emotion/styled": "^11.14.1",
+    "@mui/material": "^6.5.0",
     "@mui/material-nextjs": "^7.2.0",
+    "@mui/styled-engine-sc": "^7.2.0",
+    "@mui/x-date-pickers": "^8.9.0",
     "clsx": "^2.1.1",
+    "dayjs": "^1.11.13",
     "lucide-react": "^0.525.0",
     "next": "^15.3.5",
     "react": "^19.1.0",
     "react-dom": "^19.1.0",
     "react-router-dom": "^7.6.3",
+    "styled-components": "^6.1.19",
     "tailwind-merge": "^3.3.1"
   },
   "devDependencies": {
