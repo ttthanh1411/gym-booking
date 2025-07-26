@@ -8,6 +8,7 @@ export interface Service {
 }
 
 export interface ServiceFormData {
+  serviceid: string;
   servicename: string;
   coursedescription: string;
   serviceprice: number;

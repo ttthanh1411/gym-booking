@@ -2,25 +2,21 @@
 
 public record EditCommand : IRequest<ResultDto>
 {
-  public required Guid Serviceid { get; set; }
-
-}
-
-public record AddCommand : IRequest<ResultDto>, IMapTo<Entities.Service>
-{
+    public required Guid Serviceid { get; set; }
 
     public string? Servicename { get; set; }
 
     public string? Coursedescription { get; set; }
 
     public decimal? Serviceprice { get; set; }
+
 }
 
 public class EditCommandValidator : AbstractValidator<EditCommand>
 {
     public EditCommandValidator()
     {
-        RuleFor(x => x.Serviceid).NotEmpty().WithMessage("Không được để trống");
+        RuleFor(x => x.Servicename).NotEmpty().WithMessage("Không được để trống");
 
     }
 }

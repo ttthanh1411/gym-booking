@@ -6,13 +6,11 @@ class ServiceService extends BaseService<Service> {
         super('https://localhost:5000/service');
     }
 
-    // override getOne
-    async getOne(customerId: string): Promise<Service> {
-        const response = await fetch(`${this.baseUrl}/get?Serivceid=${customerId}`);
+    async getOne(serviceId: string): Promise<Service> {
+        const response = await fetch(`${this.baseUrl}/get?Serivceid=${serviceId}`);
         return this['handleResponse']<Service>(response); // gọi protected method từ cha
     }
 
-    // override delete để dùng Customerid
     async delete(serviceId: string): Promise<void> {
         const response = await fetch(`${this.baseUrl}/delete?Serviceid=${serviceId}`, {
             method: 'DELETE',

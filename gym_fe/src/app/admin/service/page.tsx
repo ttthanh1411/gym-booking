@@ -41,6 +41,7 @@ const ServiceManagement: React.FC = () => {
   const [pageSize, setPageSize] = useState(5);
   const [totalPages, setTotalPages] = useState(0);
   const [formData, setFormData] = useState<ServiceFormData>({
+    serviceid: '',
     servicename: '',
     coursedescription: '',
     serviceprice: 0
@@ -135,6 +136,7 @@ const ServiceManagement: React.FC = () => {
     setShowAddModal(false);
     setShowViewModal(false);
     setFormData({
+      serviceid: '',
       servicename: '',
       coursedescription: '',
       serviceprice: 0
@@ -364,6 +366,7 @@ const ServiceManagement: React.FC = () => {
                             onClick={() => {
                               setSelectedService(service);
                               setFormData({
+                                serviceid: service.serviceid,
                                 servicename: service.servicename,
                                 coursedescription: service.coursedescription,
                                 serviceprice: service.serviceprice,
@@ -475,15 +478,15 @@ const ServiceManagement: React.FC = () => {
                 <div className="space-y-6">
                   {/* Service Name */}
                   <div>
-                    <label htmlFor="serviceName" className="block text-sm font-semibold text-gray-700 mb-3">
+                    <label htmlFor="servicename" className="block text-sm font-semibold text-gray-700 mb-3">
                       Tên dịch vụ
                     </label>
                     <div className="relative">
                       <Tag className="h-5 w-5 text-green-400 absolute left-3 top-1/2 transform -translate-y-1/2" />
                       <input
                         type="text"
-                        id="serviceName"
-                        name="serviceName"
+                        id="servicename"
+                        name="servicename"
                         value={formData.servicename}
                         onChange={handleInputChange}
                         maxLength={50}
@@ -499,14 +502,14 @@ const ServiceManagement: React.FC = () => {
 
                   {/* Course Description */}
                   <div>
-                    <label htmlFor="courseDescription" className="block text-sm font-semibold text-gray-700 mb-3">
+                    <label htmlFor="coursedescription" className="block text-sm font-semibold text-gray-700 mb-3">
                       Mô tả dịch vụ
                     </label>
                     <div className="relative">
                       <FileText className="h-5 w-5 text-blue-400 absolute left-3 top-3" />
                       <textarea
-                        id="courseDescription"
-                        name="courseDescription"
+                        id="coursedescription"
+                        name="coursedescription"
                         value={formData.coursedescription}
                         onChange={handleInputChange}
                         maxLength={250}
@@ -523,15 +526,15 @@ const ServiceManagement: React.FC = () => {
 
                   {/* Service Price */}
                   <div>
-                    <label htmlFor="servicePrice" className="block text-sm font-semibold text-gray-700 mb-3">
+                    <label htmlFor="serviceprice" className="block text-sm font-semibold text-gray-700 mb-3">
                       Giá dịch vụ (VND)
                     </label>
                     <div className="relative">
                       <DollarSign className="h-5 w-5 text-purple-400 absolute left-3 top-1/2 transform -translate-y-1/2" />
                       <input
                         type="number"
-                        id="servicePrice"
-                        name="servicePrice"
+                        id="serviceprice"
+                        name="serviceprice"
                         value={formData.serviceprice}
                         onChange={handleInputChange}
                         min="0"

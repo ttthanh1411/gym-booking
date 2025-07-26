@@ -1245,6 +1245,9 @@ export interface IAddCommand2 {
 
 export class EditCommand2 implements IEditCommand2 {
     serviceid?: string;
+    servicename?: string | undefined;
+    coursedescription?: string | undefined;
+    serviceprice?: number | undefined;
 
     constructor(data?: IEditCommand2) {
         if (data) {
@@ -1258,6 +1261,9 @@ export class EditCommand2 implements IEditCommand2 {
     init(_data?: any) {
         if (_data) {
             this.serviceid = _data["serviceid"];
+            this.servicename = _data["servicename"];
+            this.coursedescription = _data["coursedescription"];
+            this.serviceprice = _data["serviceprice"];
         }
     }
 
@@ -1271,12 +1277,18 @@ export class EditCommand2 implements IEditCommand2 {
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
         data["serviceid"] = this.serviceid;
+        data["servicename"] = this.servicename;
+        data["coursedescription"] = this.coursedescription;
+        data["serviceprice"] = this.serviceprice;
         return data;
     }
 }
 
 export interface IEditCommand2 {
     serviceid?: string;
+    servicename?: string | undefined;
+    coursedescription?: string | undefined;
+    serviceprice?: number | undefined;
 }
 
 export class SwaggerException extends Error {

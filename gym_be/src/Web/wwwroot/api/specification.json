@@ -743,6 +743,19 @@
           "serviceid": {
             "type": "string",
             "format": "guid"
+          },
+          "servicename": {
+            "type": "string",
+            "nullable": true
+          },
+          "coursedescription": {
+            "type": "string",
+            "nullable": true
+          },
+          "serviceprice": {
+            "type": "number",
+            "format": "decimal",
+            "nullable": true
           }
         }
       }
