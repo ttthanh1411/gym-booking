@@ -305,11 +305,301 @@ export class CustomerClient implements ICustomerClient {
     }
 }
 
+export interface IScheduleClient {
+    get(scheduleid: string): Observable<ResultDtoOfGetDtoQuery2>;
+    getPaging(q: string | null | undefined, page: number | null | undefined, size: number | null | undefined, count: number | null | undefined, countable: boolean | null | undefined, hasNextPage: boolean | null | undefined): Observable<PagingDtoOfGetPagingDtoQuery2>;
+    add(request: AddCommand2): Observable<ResultDto>;
+    edit(request: EditCommand2): Observable<ResultDto>;
+    delete(scheduleid: string): Observable<ResultDto>;
+}
+
+@Injectable({
+    providedIn: 'root'
+})
+export class ScheduleClient implements IScheduleClient {
+    private http: HttpClient;
+    private baseUrl: string;
+    protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
+
+    constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
+        this.http = http;
+        this.baseUrl = baseUrl ?? "";
+    }
+
+    get(scheduleid: string): Observable<ResultDtoOfGetDtoQuery2> {
+        let url_ = this.baseUrl + "/Schedule/get?";
+        if (scheduleid === undefined || scheduleid === null)
+            throw new Error("The parameter 'scheduleid' must be defined and cannot be null.");
+        else
+            url_ += "Scheduleid=" + encodeURIComponent("" + scheduleid) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGet(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGet(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<ResultDtoOfGetDtoQuery2>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<ResultDtoOfGetDtoQuery2>;
+        }));
+    }
+
+    protected processGet(response: HttpResponseBase): Observable<ResultDtoOfGetDtoQuery2> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = ResultDtoOfGetDtoQuery2.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+
+    getPaging(q: string | null | undefined, page: number | null | undefined, size: number | null | undefined, count: number | null | undefined, countable: boolean | null | undefined, hasNextPage: boolean | null | undefined): Observable<PagingDtoOfGetPagingDtoQuery2> {
+        let url_ = this.baseUrl + "/Schedule/get-paging?";
+        if (q !== undefined && q !== null)
+            url_ += "Q=" + encodeURIComponent("" + q) + "&";
+        if (page !== undefined && page !== null)
+            url_ += "Page=" + encodeURIComponent("" + page) + "&";
+        if (size !== undefined && size !== null)
+            url_ += "Size=" + encodeURIComponent("" + size) + "&";
+        if (count !== undefined && count !== null)
+            url_ += "Count=" + encodeURIComponent("" + count) + "&";
+        if (countable !== undefined && countable !== null)
+            url_ += "Countable=" + encodeURIComponent("" + countable) + "&";
+        if (hasNextPage !== undefined && hasNextPage !== null)
+            url_ += "HasNextPage=" + encodeURIComponent("" + hasNextPage) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetPaging(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetPaging(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<PagingDtoOfGetPagingDtoQuery2>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<PagingDtoOfGetPagingDtoQuery2>;
+        }));
+    }
+
+    protected processGetPaging(response: HttpResponseBase): Observable<PagingDtoOfGetPagingDtoQuery2> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = PagingDtoOfGetPagingDtoQuery2.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+
+    add(request: AddCommand2): Observable<ResultDto> {
+        let url_ = this.baseUrl + "/Schedule/add";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(request);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json",
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processAdd(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processAdd(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<ResultDto>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<ResultDto>;
+        }));
+    }
+
+    protected processAdd(response: HttpResponseBase): Observable<ResultDto> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = ResultDto.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+
+    edit(request: EditCommand2): Observable<ResultDto> {
+        let url_ = this.baseUrl + "/Schedule/edit";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(request);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json",
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("put", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processEdit(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processEdit(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<ResultDto>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<ResultDto>;
+        }));
+    }
+
+    protected processEdit(response: HttpResponseBase): Observable<ResultDto> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = ResultDto.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+
+    delete(scheduleid: string): Observable<ResultDto> {
+        let url_ = this.baseUrl + "/Schedule/delete?";
+        if (scheduleid === undefined || scheduleid === null)
+            throw new Error("The parameter 'scheduleid' must be defined and cannot be null.");
+        else
+            url_ += "Scheduleid=" + encodeURIComponent("" + scheduleid) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("delete", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processDelete(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processDelete(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<ResultDto>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<ResultDto>;
+        }));
+    }
+
+    protected processDelete(response: HttpResponseBase): Observable<ResultDto> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = ResultDto.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+}
+
 export interface IServiceClient {
-    getService(serviceid: string): Observable<ResultDtoOfGetDtoQuery2>;
-    getPagingService(q: string | null | undefined, page: number | null | undefined, size: number | null | undefined, count: number | null | undefined, countable: boolean | null | undefined, hasNextPage: boolean | null | undefined): Observable<PagingDtoOfGetPagingDtoQuery2>;
+    getService(serviceid: string): Observable<ResultDtoOfGetDtoQuery3>;
+    getPagingService(q: string | null | undefined, page: number | null | undefined, size: number | null | undefined, count: number | null | undefined, countable: boolean | null | undefined, hasNextPage: boolean | null | undefined): Observable<PagingDtoOfGetPagingDtoQuery3>;
     addService(request: AddCommand2): Observable<ResultDto>;
-    editService(request: EditCommand2): Observable<ResultDto>;
+    editService(request: EditCommand3): Observable<ResultDto>;
     deleteService(serviceid: string): Observable<ResultDto>;
 }
 
@@ -326,7 +616,7 @@ export class ServiceClient implements IServiceClient {
         this.baseUrl = baseUrl ?? "";
     }
 
-    getService(serviceid: string): Observable<ResultDtoOfGetDtoQuery2> {
+    getService(serviceid: string): Observable<ResultDtoOfGetDtoQuery3> {
         let url_ = this.baseUrl + "/service/get?";
         if (serviceid === undefined || serviceid === null)
             throw new Error("The parameter 'serviceid' must be defined and cannot be null.");
@@ -349,14 +639,14 @@ export class ServiceClient implements IServiceClient {
                 try {
                     return this.processGetService(response_ as any);
                 } catch (e) {
-                    return _observableThrow(e) as any as Observable<ResultDtoOfGetDtoQuery2>;
+                    return _observableThrow(e) as any as Observable<ResultDtoOfGetDtoQuery3>;
                 }
             } else
-                return _observableThrow(response_) as any as Observable<ResultDtoOfGetDtoQuery2>;
+                return _observableThrow(response_) as any as Observable<ResultDtoOfGetDtoQuery3>;
         }));
     }
 
-    protected processGetService(response: HttpResponseBase): Observable<ResultDtoOfGetDtoQuery2> {
+    protected processGetService(response: HttpResponseBase): Observable<ResultDtoOfGetDtoQuery3> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -367,7 +657,7 @@ export class ServiceClient implements IServiceClient {
             return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
             let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result200 = ResultDtoOfGetDtoQuery2.fromJS(resultData200);
+            result200 = ResultDtoOfGetDtoQuery3.fromJS(resultData200);
             return _observableOf(result200);
             }));
         } else if (status !== 200 && status !== 204) {
@@ -378,7 +668,7 @@ export class ServiceClient implements IServiceClient {
         return _observableOf(null as any);
     }
 
-    getPagingService(q: string | null | undefined, page: number | null | undefined, size: number | null | undefined, count: number | null | undefined, countable: boolean | null | undefined, hasNextPage: boolean | null | undefined): Observable<PagingDtoOfGetPagingDtoQuery2> {
+    getPagingService(q: string | null | undefined, page: number | null | undefined, size: number | null | undefined, count: number | null | undefined, countable: boolean | null | undefined, hasNextPage: boolean | null | undefined): Observable<PagingDtoOfGetPagingDtoQuery3> {
         let url_ = this.baseUrl + "/service/get-paging?";
         if (q !== undefined && q !== null)
             url_ += "Q=" + encodeURIComponent("" + q) + "&";
@@ -409,14 +699,14 @@ export class ServiceClient implements IServiceClient {
                 try {
                     return this.processGetPagingService(response_ as any);
                 } catch (e) {
-                    return _observableThrow(e) as any as Observable<PagingDtoOfGetPagingDtoQuery2>;
+                    return _observableThrow(e) as any as Observable<PagingDtoOfGetPagingDtoQuery3>;
                 }
             } else
-                return _observableThrow(response_) as any as Observable<PagingDtoOfGetPagingDtoQuery2>;
+                return _observableThrow(response_) as any as Observable<PagingDtoOfGetPagingDtoQuery3>;
         }));
     }
 
-    protected processGetPagingService(response: HttpResponseBase): Observable<PagingDtoOfGetPagingDtoQuery2> {
+    protected processGetPagingService(response: HttpResponseBase): Observable<PagingDtoOfGetPagingDtoQuery3> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -427,7 +717,7 @@ export class ServiceClient implements IServiceClient {
             return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
             let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result200 = PagingDtoOfGetPagingDtoQuery2.fromJS(resultData200);
+            result200 = PagingDtoOfGetPagingDtoQuery3.fromJS(resultData200);
             return _observableOf(result200);
             }));
         } else if (status !== 200 && status !== 204) {
@@ -490,7 +780,7 @@ export class ServiceClient implements IServiceClient {
         return _observableOf(null as any);
     }
 
-    editService(request: EditCommand2): Observable<ResultDto> {
+    editService(request: EditCommand3): Observable<ResultDto> {
         let url_ = this.baseUrl + "/service/edit";
         url_ = url_.replace(/[?&]$/, "");
 
@@ -1056,10 +1346,11 @@ export interface IResultDtoOfGetDtoQuery2 {
 }
 
 export class GetDtoQuery2 implements IGetDtoQuery2 {
-    serviceid?: string;
-    servicename?: string | undefined;
-    coursedescription?: string | undefined;
-    serviceprice?: number | undefined;
+    scheduleid?: string;
+    dayofweek?: string | undefined;
+    maxparticipants?: number | undefined;
+    starttime?: Date | undefined;
+    endtime?: Date | undefined;
 
     constructor(data?: IGetDtoQuery2) {
         if (data) {
@@ -1072,10 +1363,11 @@ export class GetDtoQuery2 implements IGetDtoQuery2 {
 
     init(_data?: any) {
         if (_data) {
-            this.serviceid = _data["serviceid"];
-            this.servicename = _data["servicename"];
-            this.coursedescription = _data["coursedescription"];
-            this.serviceprice = _data["serviceprice"];
+            this.scheduleid = _data["scheduleid"];
+            this.dayofweek = _data["dayofweek"];
+            this.maxparticipants = _data["maxparticipants"];
+            this.starttime = _data["starttime"] ? new Date(_data["starttime"].toString()) : <any>undefined;
+            this.endtime = _data["endtime"] ? new Date(_data["endtime"].toString()) : <any>undefined;
         }
     }
 
@@ -1088,19 +1380,21 @@ export class GetDtoQuery2 implements IGetDtoQuery2 {
 
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
-        data["serviceid"] = this.serviceid;
-        data["servicename"] = this.servicename;
-        data["coursedescription"] = this.coursedescription;
-        data["serviceprice"] = this.serviceprice;
+        data["scheduleid"] = this.scheduleid;
+        data["dayofweek"] = this.dayofweek;
+        data["maxparticipants"] = this.maxparticipants;
+        data["starttime"] = this.starttime ? this.starttime.toISOString() : <any>undefined;
+        data["endtime"] = this.endtime ? this.endtime.toISOString() : <any>undefined;
         return data;
     }
 }
 
 export interface IGetDtoQuery2 {
-    serviceid?: string;
-    servicename?: string | undefined;
-    coursedescription?: string | undefined;
-    serviceprice?: number | undefined;
+    scheduleid?: string;
+    dayofweek?: string | undefined;
+    maxparticipants?: number | undefined;
+    starttime?: Date | undefined;
+    endtime?: Date | undefined;
 }
 
 export class PagingDtoOfGetPagingDtoQuery2 implements IPagingDtoOfGetPagingDtoQuery2 {
@@ -1152,10 +1446,11 @@ export interface IPagingDtoOfGetPagingDtoQuery2 {
 }
 
 export class GetPagingDtoQuery2 implements IGetPagingDtoQuery2 {
-    serviceid?: string;
-    servicename?: string | undefined;
-    coursedescription?: string | undefined;
-    serviceprice?: number | undefined;
+    scheduleid?: string;
+    dayofweek?: string | undefined;
+    maxparticipants?: number | undefined;
+    starttime?: Date | undefined;
+    endtime?: Date | undefined;
 
     constructor(data?: IGetPagingDtoQuery2) {
         if (data) {
@@ -1168,10 +1463,11 @@ export class GetPagingDtoQuery2 implements IGetPagingDtoQuery2 {
 
     init(_data?: any) {
         if (_data) {
-            this.serviceid = _data["serviceid"];
-            this.servicename = _data["servicename"];
-            this.coursedescription = _data["coursedescription"];
-            this.serviceprice = _data["serviceprice"];
+            this.scheduleid = _data["scheduleid"];
+            this.dayofweek = _data["dayofweek"];
+            this.maxparticipants = _data["maxparticipants"];
+            this.starttime = _data["starttime"] ? new Date(_data["starttime"].toString()) : <any>undefined;
+            this.endtime = _data["endtime"] ? new Date(_data["endtime"].toString()) : <any>undefined;
         }
     }
 
@@ -1184,19 +1480,21 @@ export class GetPagingDtoQuery2 implements IGetPagingDtoQuery2 {
 
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
-        data["serviceid"] = this.serviceid;
-        data["servicename"] = this.servicename;
-        data["coursedescription"] = this.coursedescription;
-        data["serviceprice"] = this.serviceprice;
+        data["scheduleid"] = this.scheduleid;
+        data["dayofweek"] = this.dayofweek;
+        data["maxparticipants"] = this.maxparticipants;
+        data["starttime"] = this.starttime ? this.starttime.toISOString() : <any>undefined;
+        data["endtime"] = this.endtime ? this.endtime.toISOString() : <any>undefined;
         return data;
     }
 }
 
 export interface IGetPagingDtoQuery2 {
-    serviceid?: string;
-    servicename?: string | undefined;
-    coursedescription?: string | undefined;
-    serviceprice?: number | undefined;
+    scheduleid?: string;
+    dayofweek?: string | undefined;
+    maxparticipants?: number | undefined;
+    starttime?: Date | undefined;
+    endtime?: Date | undefined;
 }
 
 export class AddCommand2 implements IAddCommand2 {
@@ -1244,12 +1542,100 @@ export interface IAddCommand2 {
 }
 
 export class EditCommand2 implements IEditCommand2 {
+    scheduleid?: string;
+    dayofweek?: string | undefined;
+    maxparticipants?: number | undefined;
+    starttime?: Date | undefined;
+    endtime?: Date | undefined;
+
+    constructor(data?: IEditCommand2) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.scheduleid = _data["scheduleid"];
+            this.dayofweek = _data["dayofweek"];
+            this.maxparticipants = _data["maxparticipants"];
+            this.starttime = _data["starttime"] ? new Date(_data["starttime"].toString()) : <any>undefined;
+            this.endtime = _data["endtime"] ? new Date(_data["endtime"].toString()) : <any>undefined;
+        }
+    }
+
+    static fromJS(data: any): EditCommand2 {
+        data = typeof data === 'object' ? data : {};
+        let result = new EditCommand2();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["scheduleid"] = this.scheduleid;
+        data["dayofweek"] = this.dayofweek;
+        data["maxparticipants"] = this.maxparticipants;
+        data["starttime"] = this.starttime ? this.starttime.toISOString() : <any>undefined;
+        data["endtime"] = this.endtime ? this.endtime.toISOString() : <any>undefined;
+        return data;
+    }
+}
+
+export interface IEditCommand2 {
+    scheduleid?: string;
+    dayofweek?: string | undefined;
+    maxparticipants?: number | undefined;
+    starttime?: Date | undefined;
+    endtime?: Date | undefined;
+}
+
+export class ResultDtoOfGetDtoQuery3 implements IResultDtoOfGetDtoQuery3 {
+    data?: GetDtoQuery3 | undefined;
+
+    constructor(data?: IResultDtoOfGetDtoQuery3) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.data = _data["data"] ? GetDtoQuery3.fromJS(_data["data"]) : <any>undefined;
+        }
+    }
+
+    static fromJS(data: any): ResultDtoOfGetDtoQuery3 {
+        data = typeof data === 'object' ? data : {};
+        let result = new ResultDtoOfGetDtoQuery3();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["data"] = this.data ? this.data.toJSON() : <any>undefined;
+        return data;
+    }
+}
+
+export interface IResultDtoOfGetDtoQuery3 {
+    data?: GetDtoQuery3 | undefined;
+}
+
+export class GetDtoQuery3 implements IGetDtoQuery3 {
     serviceid?: string;
     servicename?: string | undefined;
     coursedescription?: string | undefined;
     serviceprice?: number | undefined;
 
-    constructor(data?: IEditCommand2) {
+    constructor(data?: IGetDtoQuery3) {
         if (data) {
             for (var property in data) {
                 if (data.hasOwnProperty(property))
@@ -1267,9 +1653,9 @@ export class EditCommand2 implements IEditCommand2 {
         }
     }
 
-    static fromJS(data: any): EditCommand2 {
+    static fromJS(data: any): GetDtoQuery3 {
         data = typeof data === 'object' ? data : {};
-        let result = new EditCommand2();
+        let result = new GetDtoQuery3();
         result.init(data);
         return result;
     }
@@ -1284,7 +1670,151 @@ export class EditCommand2 implements IEditCommand2 {
     }
 }
 
-export interface IEditCommand2 {
+export interface IGetDtoQuery3 {
+    serviceid?: string;
+    servicename?: string | undefined;
+    coursedescription?: string | undefined;
+    serviceprice?: number | undefined;
+}
+
+export class PagingDtoOfGetPagingDtoQuery3 implements IPagingDtoOfGetPagingDtoQuery3 {
+    items?: GetPagingDtoQuery3[] | undefined;
+    meta?: PagingModel | undefined;
+
+    constructor(data?: IPagingDtoOfGetPagingDtoQuery3) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            if (Array.isArray(_data["items"])) {
+                this.items = [] as any;
+                for (let item of _data["items"])
+                    this.items!.push(GetPagingDtoQuery3.fromJS(item));
+            }
+            this.meta = _data["meta"] ? PagingModel.fromJS(_data["meta"]) : <any>undefined;
+        }
+    }
+
+    static fromJS(data: any): PagingDtoOfGetPagingDtoQuery3 {
+        data = typeof data === 'object' ? data : {};
+        let result = new PagingDtoOfGetPagingDtoQuery3();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        if (Array.isArray(this.items)) {
+            data["items"] = [];
+            for (let item of this.items)
+                data["items"].push(item ? item.toJSON() : <any>undefined);
+        }
+        data["meta"] = this.meta ? this.meta.toJSON() : <any>undefined;
+        return data;
+    }
+}
+
+export interface IPagingDtoOfGetPagingDtoQuery3 {
+    items?: GetPagingDtoQuery3[] | undefined;
+    meta?: PagingModel | undefined;
+}
+
+export class GetPagingDtoQuery3 implements IGetPagingDtoQuery3 {
+    serviceid?: string;
+    servicename?: string | undefined;
+    coursedescription?: string | undefined;
+    serviceprice?: number | undefined;
+
+    constructor(data?: IGetPagingDtoQuery3) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.serviceid = _data["serviceid"];
+            this.servicename = _data["servicename"];
+            this.coursedescription = _data["coursedescription"];
+            this.serviceprice = _data["serviceprice"];
+        }
+    }
+
+    static fromJS(data: any): GetPagingDtoQuery3 {
+        data = typeof data === 'object' ? data : {};
+        let result = new GetPagingDtoQuery3();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["serviceid"] = this.serviceid;
+        data["servicename"] = this.servicename;
+        data["coursedescription"] = this.coursedescription;
+        data["serviceprice"] = this.serviceprice;
+        return data;
+    }
+}
+
+export interface IGetPagingDtoQuery3 {
+    serviceid?: string;
+    servicename?: string | undefined;
+    coursedescription?: string | undefined;
+    serviceprice?: number | undefined;
+}
+
+export class EditCommand3 implements IEditCommand3 {
+    serviceid?: string;
+    servicename?: string | undefined;
+    coursedescription?: string | undefined;
+    serviceprice?: number | undefined;
+
+    constructor(data?: IEditCommand3) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.serviceid = _data["serviceid"];
+            this.servicename = _data["servicename"];
+            this.coursedescription = _data["coursedescription"];
+            this.serviceprice = _data["serviceprice"];
+        }
+    }
+
+    static fromJS(data: any): EditCommand3 {
+        data = typeof data === 'object' ? data : {};
+        let result = new EditCommand3();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["serviceid"] = this.serviceid;
+        data["servicename"] = this.servicename;
+        data["coursedescription"] = this.coursedescription;
+        data["serviceprice"] = this.serviceprice;
+        return data;
+    }
+}
+
+export interface IEditCommand3 {
     serviceid?: string;
     servicename?: string | undefined;
     coursedescription?: string | undefined;

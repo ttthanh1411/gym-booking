@@ -213,6 +213,213 @@
         }
       }
     },
+    "/Schedule/get": {
+      "get": {
+        "tags": [
+          "Schedule"
+        ],
+        "operationId": "Get",
+        "parameters": [
+          {
+            "name": "Scheduleid",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "guid"
+            },
+            "x-position": 1
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResultDtoOfGetDtoQuery2"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/Schedule/get-paging": {
+      "get": {
+        "tags": [
+          "Schedule"
+        ],
+        "operationId": "GetPaging",
+        "parameters": [
+          {
+            "name": "Q",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            },
+            "x-position": 1
+          },
+          {
+            "name": "Page",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "nullable": true
+            },
+            "x-position": 2
+          },
+          {
+            "name": "Size",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "nullable": true
+            },
+            "x-position": 3
+          },
+          {
+            "name": "Count",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "nullable": true
+            },
+            "x-position": 4
+          },
+          {
+            "name": "Countable",
+            "in": "query",
+            "schema": {
+              "type": "boolean",
+              "nullable": true
+            },
+            "x-position": 5
+          },
+          {
+            "name": "HasNextPage",
+            "in": "query",
+            "schema": {
+              "type": "boolean",
+              "nullable": true
+            },
+            "x-position": 6
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PagingDtoOfGetPagingDtoQuery2"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/Schedule/add": {
+      "post": {
+        "tags": [
+          "Schedule"
+        ],
+        "operationId": "Add",
+        "requestBody": {
+          "x-name": "request",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AddCommand2"
+              }
+            }
+          },
+          "required": true,
+          "x-position": 1
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResultDto"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/Schedule/edit": {
+      "put": {
+        "tags": [
+          "Schedule"
+        ],
+        "operationId": "Edit",
+        "requestBody": {
+          "x-name": "request",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/EditCommand2"
+              }
+            }
+          },
+          "required": true,
+          "x-position": 1
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResultDto"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/Schedule/delete": {
+      "delete": {
+        "tags": [
+          "Schedule"
+        ],
+        "operationId": "Delete",
+        "parameters": [
+          {
+            "name": "Scheduleid",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "guid"
+            },
+            "x-position": 1
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResultDto"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/service/get": {
       "get": {
         "tags": [
@@ -237,7 +444,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ResultDtoOfGetDtoQuery2"
+                  "$ref": "#/components/schemas/ResultDtoOfGetDtoQuery3"
                 }
               }
             }
@@ -316,7 +523,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/PagingDtoOfGetPagingDtoQuery2"
+                  "$ref": "#/components/schemas/PagingDtoOfGetPagingDtoQuery3"
                 }
               }
             }
@@ -367,7 +574,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/EditCommand2"
+                "$ref": "#/components/schemas/EditCommand3"
               }
             }
           },
@@ -654,21 +861,27 @@
         "type": "object",
         "additionalProperties": false,
         "properties": {
-          "serviceid": {
+          "scheduleid": {
             "type": "string",
             "format": "guid"
           },
-          "servicename": {
+          "dayofweek": {
             "type": "string",
             "nullable": true
           },
-          "coursedescription": {
-            "type": "string",
+          "maxparticipants": {
+            "type": "integer",
+            "format": "int32",
             "nullable": true
           },
-          "serviceprice": {
-            "type": "number",
-            "format": "decimal",
+          "starttime": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "endtime": {
+            "type": "string",
+            "format": "date-time",
             "nullable": true
           }
         }
@@ -698,21 +911,27 @@
         "type": "object",
         "additionalProperties": false,
         "properties": {
-          "serviceid": {
+          "scheduleid": {
             "type": "string",
             "format": "guid"
           },
-          "servicename": {
+          "dayofweek": {
             "type": "string",
             "nullable": true
           },
-          "coursedescription": {
-            "type": "string",
+          "maxparticipants": {
+            "type": "integer",
+            "format": "int32",
             "nullable": true
           },
-          "serviceprice": {
-            "type": "number",
-            "format": "decimal",
+          "starttime": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "endtime": {
+            "type": "string",
+            "format": "date-time",
             "nullable": true
           }
         }
@@ -737,6 +956,116 @@
         }
       },
       "EditCommand2": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "scheduleid": {
+            "type": "string",
+            "format": "guid"
+          },
+          "dayofweek": {
+            "type": "string",
+            "nullable": true
+          },
+          "maxparticipants": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "starttime": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "endtime": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          }
+        }
+      },
+      "ResultDtoOfGetDtoQuery3": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "data": {
+            "nullable": true,
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/GetDtoQuery3"
+              }
+            ]
+          }
+        }
+      },
+      "GetDtoQuery3": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "serviceid": {
+            "type": "string",
+            "format": "guid"
+          },
+          "servicename": {
+            "type": "string",
+            "nullable": true
+          },
+          "coursedescription": {
+            "type": "string",
+            "nullable": true
+          },
+          "serviceprice": {
+            "type": "number",
+            "format": "decimal",
+            "nullable": true
+          }
+        }
+      },
+      "PagingDtoOfGetPagingDtoQuery3": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "items": {
+            "type": "array",
+            "nullable": true,
+            "items": {
+              "$ref": "#/components/schemas/GetPagingDtoQuery3"
+            }
+          },
+          "meta": {
+            "nullable": true,
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/PagingModel"
+              }
+            ]
+          }
+        }
+      },
+      "GetPagingDtoQuery3": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "serviceid": {
+            "type": "string",
+            "format": "guid"
+          },
+          "servicename": {
+            "type": "string",
+            "nullable": true
+          },
+          "coursedescription": {
+            "type": "string",
+            "nullable": true
+          },
+          "serviceprice": {
+            "type": "number",
+            "format": "decimal",
+            "nullable": true
+          }
+        }
+      },
+      "EditCommand3": {
         "type": "object",
         "additionalProperties": false,
         "properties": {
