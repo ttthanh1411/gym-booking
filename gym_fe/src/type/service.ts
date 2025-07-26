@@ -1,16 +1,16 @@
 export interface Service {
-  serviceID: string;
-  serviceName: string;
-  courseDescription: string;
-  servicePrice: number;
+  serviceid: string;
+  servicename: string;
+  coursedescription: string;
+  serviceprice: number;
   createdAt?: string;
   updatedAt?: string;
 }
 
 export interface ServiceFormData {
-  serviceName: string;
-  courseDescription: string;
-  servicePrice: number;
+  servicename: string;
+  coursedescription: string;
+  serviceprice: number;
 }
 
 export interface ServiceFilters {

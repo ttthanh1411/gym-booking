@@ -41,9 +41,9 @@ const ServiceManagement: React.FC = () => {
   const [pageSize, setPageSize] = useState(5);
   const [totalPages, setTotalPages] = useState(0);
   const [formData, setFormData] = useState<ServiceFormData>({
-    serviceName: '',
-    courseDescription: '',
-    servicePrice: 0
+    servicename: '',
+    coursedescription: '',
+    serviceprice: 0
   });
 
   const fetchServices = async () => {
@@ -72,17 +72,17 @@ const ServiceManagement: React.FC = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
-    if (!formData.serviceName.trim()) {
+    if (!formData.servicename.trim()) {
       showNotification('error', 'Vui lòng nhập tên dịch vụ');
       return;
     }
     
-    if (!formData.courseDescription.trim()) {
+    if (!formData.coursedescription.trim()) {
       showNotification('error', 'Vui lòng nhập mô tả dịch vụ');
       return;
     }
     
-    if (formData.servicePrice <= 0) {
+    if (formData.serviceprice <= 0) {
       showNotification('error', 'Giá dịch vụ phải lớn hơn 0');
       return;
     }
@@ -91,7 +91,7 @@ const ServiceManagement: React.FC = () => {
     
     try {
       if (modalMode === 'edit' && selectedService) {
-        await serviceService.update(selectedService.serviceID, formData);
+        await serviceService.update(selectedService.serviceid, formData);
         showNotification('success', 'Cập nhật dịch vụ thành công!');
       } else {
         await serviceService.create(formData);
@@ -135,9 +135,9 @@ const ServiceManagement: React.FC = () => {
     setShowAddModal(false);
     setShowViewModal(false);
     setFormData({
-      serviceName: '',
-      courseDescription: '',
-      servicePrice: 0
+      servicename: '',
+      coursedescription: '',
+      serviceprice: 0
     });
     setSelectedService(null);
     setModalMode(null);
@@ -322,15 +322,15 @@ const ServiceManagement: React.FC = () => {
                   </tr>
                 ) : (
                   services.map((service) => (
-                    <tr key={service.serviceID} className="hover:bg-gray-50 transition-colors">
+                    <tr key={service.serviceid} className="hover:bg-gray-50 transition-colors">
                       <td className="px-6 py-4 whitespace-nowrap">
                         <div className="flex items-center">
                           <div className="h-10 w-10 bg-gradient-to-r from-green-500 to-blue-600 rounded-lg flex items-center justify-center">
                             <Package className="h-5 w-5 text-white" />
                           </div>
                           <div className="ml-4">
-                            <div className="text-sm font-medium text-gray-900">{service.serviceName}</div>
-                            <div className="text-sm text-gray-500">ID: {service.serviceID}</div>
+                            <div className="text-sm font-medium text-gray-900">{service.servicename}</div>
+                            <div className="text-sm text-gray-500">ID: {service.serviceid}</div>
                           </div>
                         </div>
                       </td>
@@ -338,15 +338,15 @@ const ServiceManagement: React.FC = () => {
                         <div className="flex items-start space-x-2">
                           <FileText className="h-4 w-4 text-gray-400 mt-0.5 flex-shrink-0" />
                           <p className="text-sm text-gray-900 line-clamp-2">
-                            {service.courseDescription.length > 80 
-                              ? `${service.courseDescription.substring(0, 80)}...` 
-                              : service.courseDescription}
+                            {service.coursedescription.length > 80 
+                              ? `${service.coursedescription.substring(0, 80)}...` 
+                              : service.coursedescription}
                           </p>
                         </div>
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-center">
-                        <span className={`inline-flex px-3 py-1 text-xs font-semibold rounded-full ${getPriceColor(service.servicePrice)}`}>
-                          {formatPrice(service.servicePrice)}
+                        <span className={`inline-flex px-3 py-1 text-xs font-semibold rounded-full ${getPriceColor(service.serviceprice)}`}>
+                          {formatPrice(service.serviceprice)}
                         </span>
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-center text-sm font-medium">
@@ -364,9 +364,9 @@ const ServiceManagement: React.FC = () => {
                             onClick={() => {
                               setSelectedService(service);
                               setFormData({
-                                serviceName: service.serviceName,
-                                courseDescription: service.courseDescription,
-                                servicePrice: service.servicePrice,
+                                servicename: service.servicename,
+                                coursedescription: service.coursedescription,
+                                serviceprice: service.serviceprice,
                               });
                               setModalMode('edit');
                               setShowAddModal(true);
@@ -376,7 +376,7 @@ const ServiceManagement: React.FC = () => {
                             <Edit2 className="h-4 w-4" />
                           </button>
                           <button
-                            onClick={() => handleDelete(service.serviceID)}
+                            onClick={() => handleDelete(service.serviceid)}
                             className="text-red-600 hover:text-red-900 transition-colors p-2 hover:bg-red-50 rounded-lg"
                           >
                             <Trash2 className="h-4 w-4" />
@@ -484,7 +484,7 @@ const ServiceManagement: React.FC = () => {
                         type="text"
                         id="serviceName"
                         name="serviceName"
-                        value={formData.serviceName}
+                        value={formData.servicename}
                         onChange={handleInputChange}
                         maxLength={50}
                         required
@@ -493,7 +493,7 @@ const ServiceManagement: React.FC = () => {
                       />
                     </div>
                     <p className="text-xs text-gray-500 mt-1">
-                      {formData.serviceName.length}/50 ký tự
+                      {formData.servicename.length}/50 ký tự
                     </p>
                   </div>
 
@@ -507,7 +507,7 @@ const ServiceManagement: React.FC = () => {
                       <textarea
                         id="courseDescription"
                         name="courseDescription"
-                        value={formData.courseDescription}
+                        value={formData.coursedescription}
                         onChange={handleInputChange}
                         maxLength={250}
                         rows={4}
@@ -517,7 +517,7 @@ const ServiceManagement: React.FC = () => {
                       />
                     </div>
                     <p className="text-xs text-gray-500 mt-1">
-                      {formData.courseDescription.length}/250 ký tự
+                      {formData.coursedescription.length}/250 ký tự
                     </p>
                   </div>
 
@@ -532,7 +532,7 @@ const ServiceManagement: React.FC = () => {
                         type="number"
                         id="servicePrice"
                         name="servicePrice"
-                        value={formData.servicePrice}
+                        value={formData.serviceprice}
                         onChange={handleInputChange}
                         min="0"
                         step="1000"
@@ -541,9 +541,9 @@ const ServiceManagement: React.FC = () => {
                         placeholder="Nhập giá dịch vụ..."
                       />
                     </div>
-                    {formData.servicePrice > 0 && (
+                    {formData.serviceprice > 0 && (
                       <p className="text-xs text-gray-500 mt-1">
-                        Giá hiển thị: {formatPrice(formData.servicePrice)}
+                        Giá hiển thị: {formatPrice(formData.serviceprice)}
                       </p>
                     )}
                   </div>
@@ -597,29 +597,29 @@ const ServiceManagement: React.FC = () => {
                   <div>
                     <label className="text-sm font-semibold text-gray-700">ID dịch vụ</label>
                     <p className="mt-1 text-gray-900 font-mono text-sm bg-gray-50 px-3 py-2 rounded-lg">
-                      {selectedService.serviceID}
+                      {selectedService.serviceid}
                     </p>
                   </div>
                   
                   <div>
                     <label className="text-sm font-semibold text-gray-700">Tên dịch vụ</label>
                     <p className="mt-1 text-gray-900 font-medium text-lg">
-                      {selectedService.serviceName}
+                      {selectedService.servicename}
                     </p>
                   </div>
 
                   <div>
                     <label className="text-sm font-semibold text-gray-700">Mô tả dịch vụ</label>
                     <p className="mt-1 text-gray-900 leading-relaxed">
-                      {selectedService.courseDescription}
+                      {selectedService.coursedescription}
                     </p>
                   </div>
 
                   <div>
                     <label className="text-sm font-semibold text-gray-700">Giá dịch vụ</label>
                     <div className="mt-1">
-                      <span className={`inline-flex px-4 py-2 text-lg font-semibold rounded-full ${getPriceColor(selectedService.servicePrice)}`}>
-                        {formatPrice(selectedService.servicePrice)}
+                      <span className={`inline-flex px-4 py-2 text-lg font-semibold rounded-full ${getPriceColor(selectedService.serviceprice)}`}>
+                        {formatPrice(selectedService.serviceprice)}
                       </span>
                     </div>
                   </div>
