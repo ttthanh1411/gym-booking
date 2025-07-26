@@ -9,7 +9,7 @@ public record AddCommand : IRequest<ResultDto>, IMapTo<Entities.Service>
 
     public decimal? Serviceprice { get; set; }
 }
-
+    
 public class AddCommandValidator : AbstractValidator<AddCommand>
 {
     public AddCommandValidator()
